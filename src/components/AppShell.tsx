@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import {
-  Boxes, ChevronDown, Command, Gauge, HelpCircle, History, ListRestart,
+  Boxes, ChevronDown, Command, FileText, Gauge, HelpCircle, History, ListRestart,
   RotateCcw, Route, Search, ShieldCheck, Sparkles,
 } from 'lucide-react'
 import type { Screen } from '../types'
@@ -8,6 +8,7 @@ import { Button } from './ui'
 
 const nav: Array<{ id: Screen; label: string; fullLabel: string; icon: typeof Gauge }> = [
   { id: 'overview', label: 'Overview', fullLabel: 'Overview', icon: Gauge },
+  { id: 'policies', label: 'Policies', fullLabel: 'Policies', icon: FileText },
   { id: 'agents', label: 'Agents', fullLabel: 'Agents', icon: Boxes },
   { id: 'action', label: 'Runtime', fullLabel: 'Governed action', icon: ShieldCheck },
   { id: 'decisions', label: 'Decisions', fullLabel: 'Decisions', icon: Route },

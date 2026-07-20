@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AppShell } from './components/AppShell'
 import { Overview } from './screens/Overview'
+import { PolicyUpload } from './screens/PolicyUpload'
 import { AgentGovernance } from './screens/AgentGovernance'
 import { GovernedAction } from './screens/GovernedAction'
 import { DecisionCapsule } from './screens/DecisionCapsule'
@@ -19,7 +20,7 @@ const initialState: DemoState = {
   recallCreated: false,
 }
 
-const screens: Screen[] = ['overview', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
+const screens: Screen[] = ['overview', 'policies', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
 
 function loadScreen(): Screen {
   const requested = new URLSearchParams(window.location.search).get('screen') as Screen | null
@@ -56,6 +57,7 @@ export default function App() {
 
   let content
   switch (screen) {
+    case 'policies': content = <PolicyUpload navigate={setScreen} />; break
     case 'agents': content = <AgentGovernance state={state} update={update} navigate={setScreen} />; break
     case 'action': content = <GovernedAction state={state} update={update} navigate={setScreen} />; break
     case 'decisions': content = <DecisionCapsule state={state} navigate={setScreen} />; break

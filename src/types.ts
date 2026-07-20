@@ -1,4 +1,4 @@
-export type Screen = 'overview' | 'agents' | 'action' | 'decisions' | 'time-machine' | 'recalls'
+export type Screen = 'overview' | 'policies' | 'agents' | 'action' | 'decisions' | 'time-machine' | 'recalls'
 
 export interface DemoState {
   agentAnalyzed: boolean
