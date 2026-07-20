@@ -9,6 +9,7 @@ import { GovernedAction } from './screens/GovernedAction'
 import { DecisionCapsule } from './screens/DecisionCapsule'
 import { TimeMachine } from './screens/TimeMachine'
 import { Recalls } from './screens/Recalls'
+import { ModelIncident } from './screens/ModelIncident'
 import type { DemoState, PolicyFile, Screen } from './types'
 
 const initialState: DemoState = {
@@ -22,7 +23,7 @@ const initialState: DemoState = {
   recallCreated: false,
 }
 
-const screens: Screen[] = ['overview', 'policies', 'policy-analysis', 'policy-patch', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
+const screens: Screen[] = ['overview', 'policies', 'policy-analysis', 'policy-patch', 'agents', 'action', 'decisions', 'time-machine', 'recalls', 'model-incident']
 
 function loadScreen(): Screen {
   const requested = new URLSearchParams(window.location.search).get('screen') as Screen | null
@@ -71,6 +72,7 @@ export default function App() {
     case 'decisions': content = <DecisionCapsule state={state} navigate={setScreen} />; break
     case 'time-machine': content = <TimeMachine state={state} update={update} navigate={setScreen} />; break
     case 'recalls': content = <Recalls state={state} update={update} navigate={setScreen} />; break
+    case 'model-incident': content = <ModelIncident navigate={setScreen} />; break
     default: content = <Overview state={state} navigate={setScreen} />
   }
 

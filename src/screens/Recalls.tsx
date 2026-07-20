@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   ArrowRight, Check, CheckCircle2, CircleAlert, ClipboardCheck, Clock3,
   FileCheck2, FileText, Filter, Mail, MoreHorizontal, Search, ShieldCheck,
-  Table2, UserCheck, Users,
+  Siren, Table2, UserCheck, Users,
 } from 'lucide-react'
 import type { DemoState, Screen } from '../types'
 import { Badge, Button, Metric, PageHeader, Panel, ProgressBar } from '../components/ui'
@@ -14,6 +14,10 @@ const cases = [
   ['PF-2551', 'Candidate 2551', 'Caregiving leave', 'Awaiting reassessment', 'Unassigned'],
 ]
 
+function ModelIncidentEntry({ navigate }: { navigate: (screen: Screen) => void }) {
+  return <div className="model-incident-entry"><span><Siren size={19} /></span><div><Badge tone="danger">Independent incident path</Badge><strong>Deployed model defect detected?</strong><p>Model incidents can be declared independently when a deployed model defect is detected.</p></div><Button variant="secondary" onClick={() => navigate('model-incident')}>Declare model incident</Button></div>
+}
+
 export function Recalls({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [creating, setCreating] = useState(false)
   const [createdNow, setCreatedNow] = useState(false)
@@ -23,13 +27,14 @@ export function Recalls({ state, update, navigate }: { state: DemoState; update:
   }
 
   if (!state.replayComplete) {
-    return <div className="page-stack"><PageHeader eyebrow="Controlled remediation" title="Recall center" description="Turn governance findings into accountable correction work." /><Panel><div className="locked-empty"><ShieldCheck size={28} /><h2>No recall source is available</h2><p>Run Policy Replay PR-005 to identify affected decisions before creating a recall.</p><Button onClick={() => navigate('time-machine')}>Open Time Machine</Button></div></Panel></div>
+    return <div className="page-stack"><PageHeader eyebrow="Controlled remediation" title="Recall center" description="Turn governance findings into accountable correction work." /><ModelIncidentEntry navigate={navigate} /><Panel><div className="locked-empty"><ShieldCheck size={28} /><h2>No recall source is available</h2><p>Run Policy Replay PR-005 to identify affected decisions before creating a recall.</p><Button onClick={() => navigate('time-machine')}>Open Time Machine</Button></div></Panel></div>
   }
 
   if (!state.recallCreated) {
     return (
       <div className="page-stack recalls-page">
         <PageHeader eyebrow="Controlled remediation" title="Create recall" description="Convert replay findings into assigned, reviewable correction work." actions={<Badge tone="danger">Draft</Badge>} />
+        <ModelIncidentEntry navigate={navigate} />
         <div className="recall-source"><span className="source-icon"><FileText size={18} /></span><div><span>Source finding</span><strong>Policy Replay PR-005</strong><small>Recruitment Policy v1.4 → v1.5 · Completed 19 Jul 2026</small></div><Button variant="ghost" onClick={() => navigate('time-machine')}>View replay</Button></div>
         <div className="recall-create-grid">
           <Panel title="Recall scope" description="Only decisions whose governance outcome changed are included.">
@@ -57,6 +62,7 @@ export function Recalls({ state, update, navigate }: { state: DemoState; update:
   return (
     <div className="page-stack recalls-page">
       <PageHeader eyebrow="Recall · RC-017" title="Recruitment leave-policy reassessment" description="Independent review of candidate decisions affected by Recruitment Policy v1.5." actions={<><Badge tone="danger" dot>Active recall</Badge><Button variant="secondary">Export recall report</Button></>} />
+      <ModelIncidentEntry navigate={navigate} />
       {createdNow && <div className="created-banner"><CheckCircle2 size={20} /><div><strong>Recall RC-017 created</strong><span>73 reassessment tasks are ready for assignment.</span></div><button onClick={() => setCreatedNow(false)}>Dismiss</button></div>}
       <div className="recall-meta"><div><span>Source</span><strong>Policy Replay PR-005</strong></div><div><span>Accountable owner</span><strong>Director of Human Resources</strong></div><div><span>Created</span><strong>19 Jul 2026 · 11:24</strong></div><div><span>Target</span><strong>14 Aug 2026</strong></div><div><span>Status</span><Badge tone="warning">Reassessment</Badge></div></div>
       <div className="metric-grid"><Metric label="Decisions identified" value="73" tone="danger" /><Metric label="Awaiting reassessment" value="73" tone="warning" /><Metric label="Reviewed" value="0" /><Metric label="Corrected" value="0" /></div>

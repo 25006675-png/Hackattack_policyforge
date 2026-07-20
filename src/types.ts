@@ -1,4 +1,4 @@
-export type Screen = 'overview' | 'policies' | 'policy-analysis' | 'policy-patch' | 'agents' | 'action' | 'decisions' | 'time-machine' | 'recalls'
+export type Screen = 'overview' | 'policies' | 'policy-analysis' | 'policy-patch' | 'agents' | 'action' | 'decisions' | 'time-machine' | 'recalls' | 'model-incident'
 
 export interface PolicyFile {
   name: string

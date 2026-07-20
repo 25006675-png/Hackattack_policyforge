@@ -39,7 +39,7 @@ export function AppShell({ screen, onNavigate, onReset, children }: { screen: Sc
             return (
               <button
                 key={item.id}
-                className={screen === item.id || (item.id === 'policies' && (screen === 'policy-analysis' || screen === 'policy-patch')) ? 'active' : ''}
+                className={screen === item.id || (item.id === 'policies' && (screen === 'policy-analysis' || screen === 'policy-patch')) || (item.id === 'recalls' && screen === 'model-incident') ? 'active' : ''}
                 aria-label={item.fullLabel}
                 onClick={() => onNavigate(item.id)}
               >
