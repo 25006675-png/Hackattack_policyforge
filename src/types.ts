@@ -1,4 +1,10 @@
-export type Screen = 'overview' | 'policies' | 'agents' | 'action' | 'decisions' | 'time-machine' | 'recalls'
+export type Screen = 'overview' | 'policies' | 'policy-analysis' | 'agents' | 'action' | 'decisions' | 'time-machine' | 'recalls'
+
+export interface PolicyFile {
+  name: string
+  size: number
+  type: string
+}
 
 export interface DemoState {
   agentAnalyzed: boolean

@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { AppShell } from './components/AppShell'
 import { Overview } from './screens/Overview'
 import { PolicyUpload } from './screens/PolicyUpload'
+import { PolicyAnalysis } from './screens/PolicyAnalysis'
 import { AgentGovernance } from './screens/AgentGovernance'
 import { GovernedAction } from './screens/GovernedAction'
 import { DecisionCapsule } from './screens/DecisionCapsule'
 import { TimeMachine } from './screens/TimeMachine'
 import { Recalls } from './screens/Recalls'
-import type { DemoState, Screen } from './types'
+import type { DemoState, PolicyFile, Screen } from './types'
 
 const initialState: DemoState = {
   agentAnalyzed: false,
@@ -20,7 +21,7 @@ const initialState: DemoState = {
   recallCreated: false,
 }
 
-const screens: Screen[] = ['overview', 'policies', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
+const screens: Screen[] = ['overview', 'policies', 'policy-analysis', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
 
 function loadScreen(): Screen {
   const requested = new URLSearchParams(window.location.search).get('screen') as Screen | null
@@ -43,6 +44,8 @@ function loadState(): DemoState {
 export default function App() {
   const [screen, setScreen] = useState<Screen>(loadScreen)
   const [state, setState] = useState<DemoState>(loadState)
+  const [policyFile, setPolicyFile] = useState<PolicyFile | null>(null)
+  const [policyAnalysisComplete, setPolicyAnalysisComplete] = useState(false)
 
   useEffect(() => {
     localStorage.setItem('policyforge-demo', JSON.stringify(state))
@@ -51,13 +54,16 @@ export default function App() {
   const update = (next: Partial<DemoState>) => setState((current) => ({ ...current, ...next }))
   const reset = () => {
     setState(initialState)
+    setPolicyFile(null)
+    setPolicyAnalysisComplete(false)
     setScreen('overview')
     localStorage.removeItem('policyforge-demo')
   }
 
   let content
   switch (screen) {
-    case 'policies': content = <PolicyUpload navigate={setScreen} />; break
+    case 'policies': content = <PolicyUpload policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} onPolicyFileChange={setPolicyFile} onAnalysisComplete={setPolicyAnalysisComplete} navigate={setScreen} />; break
+    case 'policy-analysis': content = <PolicyAnalysis policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} navigate={setScreen} />; break
     case 'agents': content = <AgentGovernance state={state} update={update} navigate={setScreen} />; break
     case 'action': content = <GovernedAction state={state} update={update} navigate={setScreen} />; break
     case 'decisions': content = <DecisionCapsule state={state} navigate={setScreen} />; break
