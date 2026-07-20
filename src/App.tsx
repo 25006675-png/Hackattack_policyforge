@@ -3,6 +3,7 @@ import { AppShell } from './components/AppShell'
 import { Overview } from './screens/Overview'
 import { PolicyUpload } from './screens/PolicyUpload'
 import { PolicyAnalysis } from './screens/PolicyAnalysis'
+import { PolicyPatch } from './screens/PolicyPatch'
 import { AgentGovernance } from './screens/AgentGovernance'
 import { GovernedAction } from './screens/GovernedAction'
 import { DecisionCapsule } from './screens/DecisionCapsule'
@@ -21,7 +22,7 @@ const initialState: DemoState = {
   recallCreated: false,
 }
 
-const screens: Screen[] = ['overview', 'policies', 'policy-analysis', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
+const screens: Screen[] = ['overview', 'policies', 'policy-analysis', 'policy-patch', 'agents', 'action', 'decisions', 'time-machine', 'recalls']
 
 function loadScreen(): Screen {
   const requested = new URLSearchParams(window.location.search).get('screen') as Screen | null
@@ -64,6 +65,7 @@ export default function App() {
   switch (screen) {
     case 'policies': content = <PolicyUpload policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} onPolicyFileChange={setPolicyFile} onAnalysisComplete={setPolicyAnalysisComplete} navigate={setScreen} />; break
     case 'policy-analysis': content = <PolicyAnalysis policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} navigate={setScreen} />; break
+    case 'policy-patch': content = <PolicyPatch navigate={setScreen} />; break
     case 'agents': content = <AgentGovernance state={state} policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} update={update} navigate={setScreen} />; break
     case 'action': content = <GovernedAction state={state} update={update} navigate={setScreen} />; break
     case 'decisions': content = <DecisionCapsule state={state} navigate={setScreen} />; break

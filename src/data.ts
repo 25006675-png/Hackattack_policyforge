@@ -38,6 +38,45 @@ export const requestCheckerExamples = [
   { id: 'allow-record', label: 'Test ALLOW AND RECORD', department: 'Engineering', aiTool: 'Approved Enterprise AI', purpose: 'Source-code assistance', prompt: 'Review this internal TypeScript validation function.', detected: 'Source code sent to approved Enterprise AI', policy: 'AI Standard §9.1', outcome: 'ALLOW AND RECORD', tone: 'success' as const, explanation: 'The request uses an approved enterprise model for an allowed engineering purpose.', actions: ['Allow the request', 'Record the employee and model', 'Preserve policy version', 'Create an audit event'], nextStep: 'Proceed with the approved Enterprise AI and retain the audit record.' },
 ]
 
+export const policyPatchIncidents = [
+  {
+    id: 'INC-042',
+    source: 'Governance Simulation GS-014',
+    problem: 'Customer account numbers are not explicitly classified as identifying financial data.',
+    exampleRequest: 'Customer name removed.\nAccount Number: 123456789\nTransaction: RM20,000',
+    existingPolicy: 'Customer personal information must not be shared with public AI tools.',
+    existingOutcome: 'The request may pass after the customer name is removed.',
+    risk: 'The account number can still identify a customer and expose financial information.',
+    impact: {
+      affectedControl: 'Customer Data Protection §4.2',
+      currentPolicyVersion: 'Recruitment / Enterprise AI Policy v1.4',
+      affectedScenarios: '2',
+      currentCoverage: '94%',
+      severity: 'High',
+    },
+    suggestedPatch: 'Customer names, phone numbers, account numbers,\nfinancial identifiers, and equivalent direct identifiers\nmust not be shared with public AI tools.',
+    generatedControl: {
+      if: 'Data includes customer account numbers',
+      and: 'AI tool type is Public AI',
+      then: ['BLOCK the request', 'Notify the employee', 'Record the incident', 'Recommend an approved Enterprise AI'],
+    },
+    comparison: {
+      before: ['Customer name removed', 'Request may pass'],
+      after: ['Customer account number detected', 'BLOCK'],
+    },
+    retest: {
+      before: [['Scenarios tested', '100'], ['Passed', '94'], ['Ambiguous', '4'], ['Loopholes', '2'], ['Coverage', '94%']],
+      after: [['Scenarios tested', '101'], ['Handled', '101'], ['Unresolved loopholes', '0'], ['Coverage', '100%']],
+    },
+    approval: {
+      policyVersion: 'v1.4 → v1.5',
+      patch: 'PATCH-009',
+      approvedBy: 'AI Governance Administrator',
+      status: 'Ready for deployment',
+    },
+  },
+]
+
 export const evidenceNodes: EvidenceNode[] = [
   {
     id: 'application', label: 'Recorded input', title: 'Candidate application received',

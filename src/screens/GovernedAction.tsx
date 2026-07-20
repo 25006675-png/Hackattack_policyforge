@@ -157,7 +157,7 @@ export function GovernedAction({ state, update, navigate }: { state: DemoState; 
         )}
 
         {result?.kind === 'custom' && (
-          <div className="request-custom-message" role="status"><CircleAlert size={18} /><p>Custom request evaluation is not available in this prototype. Select a prepared example to run representative enforcement.</p></div>
+          <div className="request-custom-message" role="status"><CircleAlert size={18} /><p><strong>Custom content was not analysed.</strong> Custom request evaluation is not available in this prototype. Select a prepared example to run representative enforcement.</p><Button variant="secondary" onClick={() => navigate('policy-patch')}>Review representative policy gap</Button></div>
         )}
 
         {result?.kind === 'example' && (() => {
@@ -173,6 +173,7 @@ export function GovernedAction({ state, update, navigate }: { state: DemoState; 
                 <section><span>Recommended next step</span><p>{example.nextStep}</p></section>
                 {example.transformedPrompt && <section className="request-result-wide transformed-prompt"><span>Transformed prompt</span><p>{example.transformedPrompt}</p></section>}
               </div>
+              {example.outcome === 'BLOCK' && <div className="request-policy-gap-action"><span>Use this representative enforcement finding to review the prepared account-number policy gap.</span><Button variant="secondary" onClick={() => navigate('policy-patch')}>Create policy patch</Button></div>}
             </div>
           )
         })()}

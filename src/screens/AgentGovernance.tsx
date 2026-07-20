@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight, Bot, Check, CheckCircle2, ChevronRight, CircleAlert, Database,
-  ExternalLink, FileText, Fingerprint, FlaskConical, Link2, LockKeyhole,
+  ExternalLink, FilePlus2, FileText, Fingerprint, FlaskConical, Link2, LockKeyhole,
   Network, Play, SearchCheck, Shield, Sparkles, UserRoundCheck, WandSparkles,
 } from 'lucide-react'
 import { controls, governanceSimulationLoopholes, governanceSimulationScenarios } from '../data'
@@ -178,7 +178,7 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
           {state.testsComplete && showSimulationDetails && <Panel title="Governance simulation findings" description="Simulated prototype testing · Representative scenarios" className="simulation-results-panel">
             <div className="simulation-metrics"><Metric label="Scenarios tested" value="100" tone="violet" /><Metric label="Passed" value="94" tone="success" /><Metric label="Ambiguous" value="4" tone="warning" /><Metric label="Loopholes detected" value="2" tone="danger" /></div>
             <div className="simulation-scenario-list">{governanceSimulationScenarios.map((scenario, index) => <div key={scenario.action}><span className="simulation-number">{index + 1}</span><div><small>{scenario.department}</small><strong>{scenario.action}</strong></div><Badge tone={outcomeTone(scenario.expected)}>{scenario.expected}</Badge><Badge tone={scenario.tone}>{scenario.result}</Badge></div>)}</div>
-            <div className="simulation-loopholes"><span className="section-label">Loophole findings</span>{governanceSimulationLoopholes.map((loophole, index) => <div key={loophole.title}><span className="loophole-number">{index + 1}</span><p><strong>{loophole.title}</strong><small>Suggested action: {loophole.action}</small></p></div>)}</div>
+            <div className="simulation-loopholes"><span className="section-label">Loophole findings</span>{governanceSimulationLoopholes.map((loophole, index) => <div key={loophole.title}><span className="loophole-number">{index + 1}</span><p><strong>{loophole.title}</strong><small>Suggested action: {loophole.action}</small></p>{index === 0 && <Button variant="secondary" onClick={() => navigate('policy-patch')} icon={<FilePlus2 size={14} />}>Create policy patch</Button>}</div>)}</div>
           </Panel>}
 
           <div className={`deployment-bar ${state.agentActive ? 'deployed' : ''}`}>
