@@ -5,7 +5,7 @@ import {
   Network, Play, SearchCheck, Shield, Sparkles, UserRoundCheck, WandSparkles,
 } from 'lucide-react'
 import { controls, testScenarios } from '../data'
-import type { DemoState, Screen, Tone } from '../types'
+import type { DemoState, PolicyFile, Screen, Tone } from '../types'
 import { Badge, Button, PageHeader, Panel } from '../components/ui'
 
 function outcomeTone(outcome: string): Tone {
@@ -16,11 +16,12 @@ function outcomeTone(outcome: string): Tone {
   return 'violet'
 }
 
-export function AgentGovernance({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
+export function AgentGovernance({ state, policyFile, policyAnalysisComplete, update, navigate }: { state: DemoState; policyFile: PolicyFile | null; policyAnalysisComplete: boolean; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisStep, setAnalysisStep] = useState(0)
   const [testing, setTesting] = useState(false)
   const analysisLabels = ['Inspecting capabilities', 'Mapping accessed data', 'Finding applicable policies', 'Generating controls']
+  const hasCompletedPolicyAnalysis = policyFile !== null && policyAnalysisComplete
 
   const analyze = () => {
     setAnalyzing(true)
@@ -53,6 +54,15 @@ export function AgentGovernance({ state, update, navigate }: { state: DemoState;
         <div><span>Risk</span><Badge tone="danger">High</Badge></div>
         <div><span>Last changed</span><strong>17 Jul 2026</strong></div>
       </div>
+
+      {hasCompletedPolicyAnalysis && <section className="agent-policy-source" aria-label="Source policy analysis">
+        <div className="agent-policy-source-heading"><FileText size={18} /><span><strong title={policyFile.name}>{policyFile.name}</strong><small>Recruitment Policy v1.4 · Simulated prototype analysis</small></span></div>
+        <div><span>File type</span><strong>{policyFile.type}</strong></div>
+        <div><span>Policy analysis</span><strong>12 clauses detected</strong></div>
+        <div><span>Policy controls</span><strong>8 generated</strong></div>
+        <div><span>Agent mapping</span><strong>7 controls mapped</strong></div>
+        <div><span>Analysis status</span><Badge tone="success" dot>Complete</Badge></div>
+      </section>}
 
       <div className="workflow-steps">
         {[
@@ -116,7 +126,7 @@ export function AgentGovernance({ state, update, navigate }: { state: DemoState;
             <section className="mapping-column evidence-column">
               <header><span>3</span><div><strong>Policy evidence</strong><small>Approved source clauses</small></div></header>
               <div className="evidence-doc">
-                <div className="evidence-doc-title"><FileText size={17} /><div><strong>Recruitment Policy</strong><small>Version 1.4 · Active</small></div></div>
+                <div className="evidence-doc-title"><FileText size={17} /><div><strong title={hasCompletedPolicyAnalysis ? policyFile.name : undefined}>{hasCompletedPolicyAnalysis ? policyFile.name : 'Recruitment Policy'}</strong><small>{hasCompletedPolicyAnalysis ? 'Recruitment Policy v1.4 · Representative simulated evidence' : 'Version 1.4 · Active'}</small></div></div>
                 <p><mark>Candidate identity must be removed</mark> before applicant data is sent to an external model.</p>
                 <p>Automated systems may recommend, but <mark>must not determine final candidate outcomes</mark> without authorized human review.</p>
                 <p>Protected characteristics must not be used to rank or profile candidates.</p>

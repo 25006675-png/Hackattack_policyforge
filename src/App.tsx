@@ -64,7 +64,7 @@ export default function App() {
   switch (screen) {
     case 'policies': content = <PolicyUpload policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} onPolicyFileChange={setPolicyFile} onAnalysisComplete={setPolicyAnalysisComplete} navigate={setScreen} />; break
     case 'policy-analysis': content = <PolicyAnalysis policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} navigate={setScreen} />; break
-    case 'agents': content = <AgentGovernance state={state} update={update} navigate={setScreen} />; break
+    case 'agents': content = <AgentGovernance state={state} policyFile={policyFile} policyAnalysisComplete={policyAnalysisComplete} update={update} navigate={setScreen} />; break
     case 'action': content = <GovernedAction state={state} update={update} navigate={setScreen} />; break
     case 'decisions': content = <DecisionCapsule state={state} navigate={setScreen} />; break
     case 'time-machine': content = <TimeMachine state={state} update={update} navigate={setScreen} />; break
