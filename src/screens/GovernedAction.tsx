@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight, Bot, BriefcaseBusiness, Check, CheckCircle2, CircleAlert,
   Clock3, Eye, FileText, Fingerprint, LockKeyhole, ShieldCheck, UserCheck,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import type { DemoState, Screen } from '../types'
 import { Badge, Button, PageHeader, Panel } from '../components/ui'
+import { requestCheckerExamples } from '../data'
 
 const steps = [
   { title: 'Résumé received', detail: 'APP-8842 entered the governed workflow', icon: FileText },
@@ -15,10 +16,82 @@ const steps = [
   { title: 'Negative recommendation', detail: 'Human review required by CTL-025', icon: CircleAlert },
 ]
 
+const checkingStages = [
+  'Inspecting request context',
+  'Detecting protected data',
+  'Matching applicable policy',
+  'Applying control',
+]
+
+type RequestCheckerExample = (typeof requestCheckerExamples)[number]
+type RequestCheckerResult =
+  | { kind: 'example'; example: RequestCheckerExample }
+  | { kind: 'custom' }
+
 export function GovernedAction({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
+  const [department, setDepartment] = useState('Finance')
+  const [aiTool, setAiTool] = useState('Public AI')
+  const [purpose, setPurpose] = useState('Financial analysis')
+  const [prompt, setPrompt] = useState('')
+  const [selectedExampleId, setSelectedExampleId] = useState<string | null>(null)
+  const [checking, setChecking] = useState(false)
+  const [checkingStage, setCheckingStage] = useState(-1)
+  const [result, setResult] = useState<RequestCheckerResult | null>(null)
+  const requestTimerIds = useRef<Array<ReturnType<typeof setTimeout>>>([])
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(state.actionComplete ? steps.length : 0)
   const [reviewed, setReviewed] = useState(state.decisionComplete)
+
+  const clearRequestTimers = () => {
+    requestTimerIds.current.forEach((timerId) => clearTimeout(timerId))
+    requestTimerIds.current = []
+  }
+
+  useEffect(() => () => clearRequestTimers(), [])
+
+  const clearPreparedSelection = () => {
+    clearRequestTimers()
+    setChecking(false)
+    setCheckingStage(-1)
+    setSelectedExampleId(null)
+    setResult(null)
+  }
+
+  const selectExample = (example: RequestCheckerExample) => {
+    clearRequestTimers()
+    setChecking(false)
+    setCheckingStage(-1)
+    setSelectedExampleId(example.id)
+    setDepartment(example.department)
+    setAiTool(example.aiTool)
+    setPurpose(example.purpose)
+    setPrompt(example.prompt)
+    setResult(null)
+  }
+
+  const checkRequest = () => {
+    clearRequestTimers()
+    setResult(null)
+
+    const example = requestCheckerExamples.find((item) => item.id === selectedExampleId)
+    if (!example) {
+      setChecking(false)
+      setCheckingStage(-1)
+      setResult({ kind: 'custom' })
+      return
+    }
+
+    setChecking(true)
+    setCheckingStage(0)
+    checkingStages.slice(1).forEach((_, index) => {
+      requestTimerIds.current.push(setTimeout(() => setCheckingStage(index + 1), 620 * (index + 1)))
+    })
+    requestTimerIds.current.push(setTimeout(() => {
+      setChecking(false)
+      setResult({ kind: 'example', example })
+      requestTimerIds.current = []
+    }, 620 * checkingStages.length))
+  }
 
   const run = () => {
     if (!state.agentActive) return navigate('agents')
@@ -34,6 +107,79 @@ export function GovernedAction({ state, update, navigate }: { state: DemoState; 
 
   return (
     <div className="page-stack">
+      <PageHeader
+        eyebrow="Employee request governance"
+        title="Employee Request Checker"
+        description="Test how representative employee AI requests are handled by runtime policy controls."
+        actions={<Badge tone="info" dot>Frontend prototype</Badge>}
+      />
+
+      <Panel className="request-checker">
+        <div className="request-checker-examples" aria-label="Prepared request examples">
+          <div>
+            <strong>Quick examples</strong>
+            <span>Choose a representative request to populate the checker.</span>
+          </div>
+          <div>
+            {requestCheckerExamples.map((example) => (
+              <button
+                key={example.id}
+                type="button"
+                className={selectedExampleId === example.id ? 'selected' : ''}
+                onClick={() => selectExample(example)}
+              >
+                {example.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="request-checker-form">
+          <label><span>Department</span><select value={department} onChange={(event) => { setDepartment(event.target.value); clearPreparedSelection() }}><option>Finance</option><option>Customer Service</option><option>Human Resources</option><option>Engineering</option></select></label>
+          <label><span>AI tool</span><select value={aiTool} onChange={(event) => { setAiTool(event.target.value); clearPreparedSelection() }}><option>Public AI</option><option>Approved Enterprise AI</option><option>Candidate Screening Agent</option></select></label>
+          <label><span>Purpose</span><select value={purpose} onChange={(event) => { setPurpose(event.target.value); clearPreparedSelection() }}><option>Financial analysis</option><option>Customer support</option><option>Candidate selection</option><option>Source-code assistance</option></select></label>
+          <label className="request-prompt"><span>Prompt</span><textarea value={prompt} onChange={(event) => { setPrompt(event.target.value); clearPreparedSelection() }} placeholder="Enter the employee request to check" rows={5} /></label>
+        </div>
+
+        <div className="request-checker-action">
+          <span>Simulated prototype enforcement · Representative request</span>
+          <Button onClick={checkRequest} loading={checking} disabled={checking}>Check request</Button>
+        </div>
+
+        {checking && (
+          <div className="request-checking" aria-live="polite">
+            {checkingStages.map((stage, index) => (
+              <div key={stage} className={index < checkingStage ? 'done' : index === checkingStage ? 'active' : ''}>
+                <span>{index < checkingStage ? <Check size={14} /> : index + 1}</span><strong>{stage}</strong>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {result?.kind === 'custom' && (
+          <div className="request-custom-message" role="status"><CircleAlert size={18} /><p>Custom request evaluation is not available in this prototype. Select a prepared example to run representative enforcement.</p></div>
+        )}
+
+        {result?.kind === 'example' && (() => {
+          const example = result.example
+          return (
+            <div className={`request-result request-result-${example.tone}`} aria-live="polite">
+              <header><div><span>Outcome</span><Badge tone={example.tone}>{example.outcome}</Badge></div><small>Simulated prototype enforcement · Representative request</small></header>
+              <div className="request-result-grid">
+                <section><span>Detected data or risk</span><strong>{example.detected}</strong></section>
+                <section><span>Triggered policy clause</span><strong>{example.policy}</strong></section>
+                <section className="request-result-wide"><span>Explanation</span><p>{example.explanation}</p></section>
+                <section><span>Runtime actions</span><ul>{example.actions.map((action) => <li key={action}><Check size={13} />{action}</li>)}</ul></section>
+                <section><span>Recommended next step</span><p>{example.nextStep}</p></section>
+                {example.transformedPrompt && <section className="request-result-wide transformed-prompt"><span>Transformed prompt</span><p>{example.transformedPrompt}</p></section>}
+              </div>
+            </div>
+          )
+        })()}
+      </Panel>
+
+      <div className="governed-action-heading"><span>Existing governed workflow</span><h2>Governed Agent Action</h2></div>
+
       <PageHeader
         eyebrow="Runtime governance · ACT-8842"
         title="Candidate application"
