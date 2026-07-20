@@ -102,10 +102,10 @@ export function ModelIncident({ navigate }: { navigate: (screen: Screen) => void
 
       <div className="model-incident-nav"><span>Simulated prototype model remediation · Representative incident</span><Button variant="ghost" icon={<ArrowLeft size={15} />} onClick={() => navigate('recalls')}>Back to Recall Center</Button></div>
 
-      <Panel title="Representative model incident" description={`${incident.id} · ${incident.type}`} action={<Badge tone="danger">{incident.severity}</Badge>}>
+      <Panel title="Representative model incident" description={`${incident.id} · ${incident.type}`} action={<Badge tone="danger">{incident.severity}</Badge>} className="model-incident-severity-panel">
         <div className="model-incident-summary">
           <div><span>Model</span><strong>{incident.model}</strong></div><div><span>Agent</span><strong>{incident.agent}</strong></div><div><span>Detected by</span><strong>{incident.detectedBy}</strong></div><div><span>Affected period</span><strong>{incident.affectedPeriod}</strong></div>
-          <section><span>Problem</span><p>{incident.problem}</p></section><section><span>Risk</span><p>{incident.risk}</p></section>
+          <section className="model-incident-problem"><span>Problem</span><p>{incident.problem}</p></section><section className="model-incident-risk"><span>Risk</span><p>{incident.risk}</p></section>
         </div>
       </Panel>
 
@@ -129,7 +129,7 @@ export function ModelIncident({ navigate }: { navigate: (screen: Screen) => void
 
       {workflowStage >= 4 && <>
         <div className="model-incident-impact-grid">
-          <Panel title="Downstream consequences" description="Representative consequence trace for TalentModel v4.2."><div className="model-incident-tree"><strong>TalentModel v4.2</strong><span>├── 73 hiring decisions</span><span>├── 18 rejection notices</span><span>├── 6 interview rankings</span><span>└── 3 management reports</span></div></Panel>
+          <Panel title="Downstream consequences" description="Representative consequence trace for TalentModel v4.2."><div className="model-incident-tree"><div className="model-incident-tree-root"><strong>TalentModel v4.2</strong></div><div className="model-incident-tree-connector" aria-hidden="true" /><div className="model-incident-tree-nodes"><div><strong>73</strong><span>hiring decisions</span></div><div><strong>18</strong><span>rejection notices</span></div><div><strong>6</strong><span>interview rankings</span></div><div><strong>3</strong><span>management reports</span></div></div></div></Panel>
           <Panel title="Remediation plan" description="Controlled actions prepared before recall launch."><ul className="model-incident-plan">{remediationPlan.map((item) => <li key={item}><CheckCircle2 size={14} />{item}</li>)}</ul></Panel>
         </div>
         <Panel title="Representative affected records" description="Only PF-2841 opens the existing Decision Capsule workflow."><div className="model-incident-records"><table><thead><tr><th>Decision</th><th>Candidate</th><th>Changed factor</th><th>Model effect</th><th>Remediation status</th></tr></thead><tbody>{affectedRecords.map(([id, candidate, factor, effect, status]) => <tr key={id} className={id === 'PF-2841' ? 'clickable-row' : ''} onClick={() => id === 'PF-2841' && navigate('decisions')}><td><strong className="mono">{id}</strong></td><td>{candidate}</td><td>{factor}</td><td>{effect}</td><td><Badge tone={status === 'Notice flagged' ? 'danger' : 'warning'} dot>{status}</Badge></td></tr>)}</tbody></table></div></Panel>
