@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight, Bot, Check, CheckCircle2, ChevronRight, CircleAlert, Database,
   ExternalLink, FileText, Fingerprint, FlaskConical, Link2, LockKeyhole,
   Network, Play, SearchCheck, Shield, Sparkles, UserRoundCheck, WandSparkles,
 } from 'lucide-react'
-import { controls, testScenarios } from '../data'
+import { controls, governanceSimulationLoopholes, governanceSimulationScenarios } from '../data'
 import type { DemoState, PolicyFile, Screen, Tone } from '../types'
-import { Badge, Button, PageHeader, Panel } from '../components/ui'
+import { Badge, Button, Metric, PageHeader, Panel, ProgressBar } from '../components/ui'
 
 function outcomeTone(outcome: string): Tone {
   if (outcome.includes('BLOCK')) return 'danger'
@@ -19,9 +19,20 @@ function outcomeTone(outcome: string): Tone {
 export function AgentGovernance({ state, policyFile, policyAnalysisComplete, update, navigate }: { state: DemoState; policyFile: PolicyFile | null; policyAnalysisComplete: boolean; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisStep, setAnalysisStep] = useState(0)
-  const [testing, setTesting] = useState(false)
+  const [simulationRunning, setSimulationRunning] = useState(false)
+  const [simulationStage, setSimulationStage] = useState(0)
+  const [showSimulationDetails, setShowSimulationDetails] = useState(false)
+  const simulationTimerIds = useRef<number[]>([])
   const analysisLabels = ['Inspecting capabilities', 'Mapping accessed data', 'Finding applicable policies', 'Generating controls']
+  const simulationStages = ['Generating representative scenarios', 'Applying generated controls', 'Checking conflicting outcomes', 'Measuring policy coverage', 'Identifying loopholes']
   const hasCompletedPolicyAnalysis = policyFile !== null && policyAnalysisComplete
+
+  const clearSimulationTimers = () => {
+    simulationTimerIds.current.forEach((timerId) => window.clearTimeout(timerId))
+    simulationTimerIds.current = []
+  }
+
+  useEffect(() => clearSimulationTimers, [])
 
   const analyze = () => {
     setAnalyzing(true)
@@ -30,9 +41,17 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
     setTimeout(() => { setAnalyzing(false); update({ agentAnalyzed: true }) }, 2150)
   }
 
-  const runTests = () => {
-    setTesting(true)
-    setTimeout(() => { setTesting(false); update({ testsComplete: true }) }, 1600)
+  const runSimulation = () => {
+    clearSimulationTimers()
+    update({ testsComplete: false })
+    setSimulationRunning(true)
+    setSimulationStage(0)
+    setShowSimulationDetails(false)
+    simulationStages.forEach((_, index) => simulationTimerIds.current.push(window.setTimeout(() => setSimulationStage(index + 1), 500 * (index + 1))))
+    simulationTimerIds.current.push(window.setTimeout(() => {
+      setSimulationRunning(false)
+      update({ testsComplete: true })
+    }, 500 * simulationStages.length + 250))
   }
 
   const deploy = () => update({ agentActive: true })
@@ -149,12 +168,18 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
               </div>
             </Panel>
 
-            <Panel title="Policy test scenarios" description="Confirm each control returns the expected runtime outcome." action={<Button variant="secondary" loading={testing} disabled={!state.ambiguityResolved || testing} onClick={runTests} icon={<FlaskConical size={15} />}>{state.testsComplete ? 'Run tests again' : 'Run 4 tests'}</Button>}>
-              <div className="test-list">
-                {testScenarios.map((test) => <div key={test.title}><span className={state.testsComplete ? 'test-check complete' : 'test-check'}>{state.testsComplete ? <Check size={12} /> : <Play size={11} />}</span><strong>{test.title}</strong>{state.testsComplete ? <Badge tone={test.tone}>{test.result}</Badge> : <Badge>Not run</Badge>}</div>)}
-              </div>
+            <Panel title="Governance Simulator" description="Test representative scenarios against the generated controls." action={<Button variant="secondary" loading={simulationRunning} disabled={!state.ambiguityResolved || simulationRunning} onClick={runSimulation} icon={<FlaskConical size={15} />}>{state.testsComplete ? 'Run Governance Simulation again' : 'Run Governance Simulation'}</Button>}>
+              {simulationRunning ? <div className="simulation-stage-list">{simulationStages.map((stage, index) => { const done = simulationStage > index; const active = simulationStage === index; return <div key={stage} className={done ? 'done' : active ? 'active' : ''}><span>{done ? <Check size={12} /> : index + 1}</span><strong>{stage}</strong>{active && <Badge tone="violet">Running</Badge>}</div> })}</div>
+                : state.testsComplete ? <div className="simulation-complete"><Badge tone="violet" dot>Simulated prototype testing · Representative scenarios</Badge><div className="simulation-summary-stats"><span><strong>100</strong> scenarios tested</span><span className="success"><strong>94</strong> passed</span><span className="warning"><strong>4</strong> ambiguous</span><span className="danger"><strong>2</strong> loopholes</span></div><div className="simulation-coverage"><span>Policy coverage</span><strong>94%</strong><ProgressBar value={94} tone="success" /></div><Button variant="ghost" onClick={() => setShowSimulationDetails((visible) => !visible)}>{showSimulationDetails ? 'Hide details' : 'Show details'}</Button></div>
+                : <div className="simulation-empty"><FlaskConical size={20} /><p>{state.ambiguityResolved ? 'Run the simulator to measure policy coverage and identify loopholes.' : 'Resolve the policy ambiguity before running the simulator.'}</p></div>}
             </Panel>
           </div>
+
+          {state.testsComplete && showSimulationDetails && <Panel title="Governance simulation findings" description="Simulated prototype testing · Representative scenarios" className="simulation-results-panel">
+            <div className="simulation-metrics"><Metric label="Scenarios tested" value="100" tone="violet" /><Metric label="Passed" value="94" tone="success" /><Metric label="Ambiguous" value="4" tone="warning" /><Metric label="Loopholes detected" value="2" tone="danger" /></div>
+            <div className="simulation-scenario-list">{governanceSimulationScenarios.map((scenario, index) => <div key={scenario.action}><span className="simulation-number">{index + 1}</span><div><small>{scenario.department}</small><strong>{scenario.action}</strong></div><Badge tone={outcomeTone(scenario.expected)}>{scenario.expected}</Badge><Badge tone={scenario.tone}>{scenario.result}</Badge></div>)}</div>
+            <div className="simulation-loopholes"><span className="section-label">Loophole findings</span>{governanceSimulationLoopholes.map((loophole, index) => <div key={loophole.title}><span className="loophole-number">{index + 1}</span><p><strong>{loophole.title}</strong><small>Suggested action: {loophole.action}</small></p></div>)}</div>
+          </Panel>}
 
           <div className={`deployment-bar ${state.agentActive ? 'deployed' : ''}`}>
             <div>{state.agentActive ? <CheckCircle2 size={20} /> : <UserRoundCheck size={20} />}<span><strong>{state.agentActive ? 'Agent is actively governed' : 'Ready for authorized approval'}</strong><small>{state.agentActive ? 'Recruitment Policy v1.4 · 7 controls deployed' : state.testsComplete ? 'All required confirmations and tests are complete.' : 'Resolve the ambiguity and pass all policy tests.'}</small></span></div>

@@ -17,6 +17,20 @@ export const testScenarios = [
   { title: 'Profile using protected characteristics', result: 'BLOCK', tone: 'danger' as const },
 ]
 
+export const governanceSimulationScenarios = [
+  { department: 'Finance', action: 'Upload customer transactions to Public AI', expected: 'BLOCK', result: 'Passed', tone: 'success' as const },
+  { department: 'Human Resources', action: 'AI recommends rejecting a candidate', expected: 'HUMAN REVIEW', result: 'Passed', tone: 'success' as const },
+  { department: 'Engineering', action: 'Send source code to approved Enterprise AI', expected: 'ALLOW AND RECORD', result: 'Passed', tone: 'success' as const },
+  { department: 'Marketing', action: 'Generate public advertising copy', expected: 'ALLOW', result: 'Passed', tone: 'success' as const },
+  { department: 'Customer Service', action: 'Send customer complaint containing phone number to Public AI', expected: 'TRANSFORM', result: 'Ambiguous', tone: 'warning' as const },
+  { department: 'Finance', action: 'Send customer account number after removing the customer name', expected: 'BLOCK', result: 'Loophole detected', tone: 'danger' as const },
+]
+
+export const governanceSimulationLoopholes = [
+  { title: 'Customer account numbers are not explicitly classified as identifying financial data.', action: 'Extend Customer Data Protection §4.2.' },
+  { title: 'Screenshots containing sensitive information are not covered by the text-only rule.', action: 'Add multimodal input coverage.' },
+]
+
 export const evidenceNodes: EvidenceNode[] = [
   {
     id: 'application', label: 'Recorded input', title: 'Candidate application received',
