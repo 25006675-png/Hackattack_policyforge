@@ -129,7 +129,7 @@ export function PolicyPatch({ navigate }: { navigate: (screen: Screen) => void }
         <Panel className="policy-patch-locked"><div><ShieldCheck size={24} /><h2>Policy patch is locked</h2><p>Confirm the incident and convert it into a test scenario before generating the representative patch.</p></div></Panel>
       ) : (
         <>
-          <div className="policy-patch-version"><span>Policy version</span><strong className="policy-patch-version-before">v1.4</strong><ArrowRight size={18} /><strong className="policy-patch-version-after">v1.5</strong></div>
+          <div className="policy-patch-version" aria-label="Policy version v1.4 to v1.5"><span>Policy version</span><strong className="policy-patch-version-before">v1.4</strong><ArrowRight size={18} aria-hidden="true" /><strong className="policy-patch-version-after">v1.5</strong></div>
           <div className="policy-patch-generated">
             <Panel title="Suggested Policy Patch" description="Representative wording generated for administrator review." action={<Badge tone="violet">PATCH-009</Badge>}>
               <blockquote>“{incident.suggestedPatch}”</blockquote>

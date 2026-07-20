@@ -658,3 +658,131 @@ td:first-child { color: #263247; }
   .model-incident-animation { grid-template-columns: 1fr 1fr; gap: 7px; }
   .model-incident-animation > div:nth-child(-n+3)::after { display: none; }
 }
+
+/* Shen En final scoped UI polish */
+.policy-upload-page .policy-dropzone { min-height: 280px; border-radius: 12px; background: #f8faff; box-shadow: inset 0 0 0 4px #fff, 0 4px 14px rgba(42,56,84,.05); }
+.policy-upload-page .policy-dropzone:hover { border-color: #7e97d7; background: #f6f8ff; box-shadow: inset 0 0 0 4px #fff, 0 7px 16px rgba(42,56,84,.07); }
+.policy-upload-page .policy-dropzone:focus-visible { outline: 3px solid rgba(49,89,216,.24); outline-offset: 3px; border-color: var(--blue); }
+.policy-upload-page .policy-dropzone.dragging { border-style: solid; border-color: var(--blue); background: #eef3ff; box-shadow: inset 0 0 0 3px rgba(49,89,216,.12), 0 8px 18px rgba(49,89,216,.1); }
+.policy-upload-page .policy-upload-icon { width: 56px; height: 56px; border-radius: 12px; box-shadow: 0 5px 14px rgba(76,54,126,.09); }
+.policy-upload-page .policy-upload-drop-title { font-size: 15px; line-height: 1.35; }
+.policy-upload-page .policy-upload-drop-copy { margin-bottom: 14px; }
+.policy-upload-page .policy-dropzone .button { min-width: 136px; }
+.policy-upload-page .policy-file-card { border-radius: 10px; background: #f8faff; box-shadow: 0 4px 12px rgba(39,61,110,.05); }
+.policy-upload-page .policy-file-copy { min-width: 0; }
+.policy-upload-page .policy-file-copy strong { overflow: hidden; max-width: 100%; text-overflow: ellipsis; white-space: nowrap; }
+.policy-upload-page .policy-file-copy small { overflow-wrap: anywhere; }
+.policy-upload-page .policy-analysis-action { flex-wrap: wrap; row-gap: 8px; }
+.policy-upload-page .policy-stage-list > div { transition: background .16s ease, opacity .16s ease, box-shadow .16s ease; }
+.policy-upload-page .policy-stage-list > div.active { background: #f1f5ff; box-shadow: inset 3px 0 0 var(--blue); }
+.policy-upload-page .policy-stage-list > div.active > span { border-color: #9db2ee; box-shadow: 0 0 0 4px rgba(237,242,255,.9); }
+.policy-upload-page .policy-stage-list > div.done { opacity: .65; }
+.policy-upload-page .policy-result-grid > div:first-child { background: #f7f9fd; }
+.policy-upload-page .policy-result-grid > div:first-child strong { color: var(--blue); }
+.policy-upload-page .policy-result-grid > div:nth-child(2) { background: #f7fbf9; }
+.policy-upload-page .policy-result-grid > div:nth-child(2) strong { color: var(--green); }
+.policy-upload-page .policy-result-grid .review { background: #fffbf2; }
+.policy-upload-page .policy-result-grid .ambiguity { background: #fff8ea; }
+.policy-upload-page .policy-result-grid .ambiguity strong { color: var(--amber); }
+.policy-upload-page .policy-complete-banner { gap: 16px; box-shadow: 0 4px 14px rgba(31,105,69,.05); }
+.policy-upload-page .policy-complete-actions { flex-wrap: wrap; justify-content: flex-end; }
+
+.policy-analysis-page .policy-clause-card { box-shadow: 0 4px 14px rgba(34,46,70,.045); }
+.policy-analysis-page .policy-clause-card > .panel-header { border-bottom-color: #e3e7ed; }
+.policy-analysis-page .policy-analysis-original { background: #fcfbf8; }
+.policy-analysis-page .policy-analysis-original blockquote { max-width: 58ch; overflow-wrap: anywhere; border-left-color: #9aa7ba; background: #fff; line-height: 1.65; }
+.policy-analysis-page .policy-evidence { align-items: flex-start; overflow-wrap: anywhere; font-size: 10.75px; }
+.policy-analysis-page .policy-context-list { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 7px; }
+.policy-analysis-page .policy-context-list span { min-width: 0; overflow-wrap: anywhere; background: #fff; }
+.policy-analysis-page .policy-analysis-control { border-color: #cdd8f2; background: #f3f6fd; }
+.policy-analysis-page .policy-analysis-control .badge { display: inline-flex; min-height: 25px; align-items: center; }
+.policy-analysis-page .policy-runtime-actions li { min-height: 31px; align-items: flex-start; border-bottom: 1px solid #e9eeeb; border-radius: 0; background: transparent; }
+.policy-analysis-page .policy-runtime-actions li:last-child { border-bottom: 0; }
+.policy-analysis-page .policy-runtime-actions svg { flex: 0 0 auto; margin-top: 1px; }
+.policy-analysis-page .policy-confidence { display: grid; grid-template-columns: auto minmax(60px, 1fr) auto; gap: 10px; align-items: center; }
+.policy-analysis-confidence-meter { height: 5px; overflow: hidden; border-radius: 4px; background: #e5e9ed; }
+.policy-analysis-confidence-meter span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+.policy-analysis-page .policy-confidence strong { min-width: 42px; text-align: center; }
+
+.policy-patch-workflow > div { min-width: 0; transition: color .16s ease, opacity .16s ease; }
+.policy-patch-workflow > div.current { color: var(--blue-dark); font-weight: 650; }
+.policy-patch-workflow > div.current > span { width: 28px; height: 28px; border-color: #8fa8eb; background: var(--blue); color: #fff; box-shadow: 0 0 0 4px rgba(237,242,255,.9); }
+.policy-patch-workflow > div.complete { opacity: .62; }
+.policy-patch-workflow > div:not(.current):not(.complete) { opacity: .48; }
+.policy-patch-actions > div.available { box-shadow: inset 0 0 0 2px #9eb2e9, 0 5px 14px rgba(49,89,216,.09); }
+.policy-patch-actions > div.complete { opacity: .52; }
+.policy-patch-actions > div:not(.available):not(.complete) { opacity: .42; }
+.policy-patch-version { background: #f8f6fc; box-shadow: 0 3px 10px rgba(92,59,148,.05); }
+.policy-patch-version > svg { color: var(--violet); }
+.policy-patch-results-before { opacity: .62; }
+.policy-patch-results-after { box-shadow: 0 5px 14px rgba(24,122,80,.08); }
+.policy-patch-results-after > div:last-child strong { font-size: 18px; }
+.policy-patch-approved { box-shadow: 0 6px 18px rgba(24,122,80,.08); }
+.policy-patch-approved-icon { box-shadow: 0 0 0 6px rgba(234,247,240,.78); }
+.policy-patch-approved-status { border: 1px solid #cbe5d5; }
+
+.model-incident-severity-panel { box-shadow: 0 5px 16px rgba(182,60,74,.065); }
+.model-incident-problem { border-left: 3px solid var(--red); background: #fffafa; }
+.model-incident-risk { border-left: 3px solid #d29a3f !important; background: #fffaf0 !important; }
+.model-incident-risk span { color: var(--amber); }
+.model-incident-risk p { color: #6f5424; font-weight: 500; }
+.model-incident-information { grid-template-columns: repeat(2, 1fr); }
+.model-incident-information > div:nth-child(3) { border-top: 1px solid var(--line); border-left: 0; }
+.model-incident-information > div:nth-child(4) { border-left: 1px solid var(--line); }
+.model-incident-information > div:nth-child(n+5) { border-top: 1px solid var(--line); }
+.model-incident-information strong { overflow-wrap: anywhere; }
+.model-incident-animation > div { transition: opacity .16s ease, background .16s ease, box-shadow .16s ease; }
+.model-incident-animation > div.active { background: #fff7f8; box-shadow: inset 0 0 0 1px #deb1b9; }
+.model-incident-animation > div.done { opacity: .6; }
+.model-incident-scan-results > .metric:first-child { background: #f7f9fd; }
+.model-incident-scan-results > .metric:first-child .metric-value { color: var(--blue); }
+.model-incident-scan-results > .metric:nth-child(2) { background: #f6fbf8; }
+.model-incident-scan-results > .metric:nth-child(3) { background: #fff7f8; }
+.model-incident-scan-results > div:last-child { border-left-color: #efd8ac; background: #fffaf0; }
+.model-incident-scan-results > div:last-child span { color: var(--amber); }
+.model-incident-scan-results > div:last-child strong { color: #76591f; }
+.model-incident-tree-root { box-shadow: 0 4px 12px rgba(133,54,65,.075); }
+.model-incident-tree-nodes > div { transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+.model-incident-tree-nodes > div:hover { border-color: #d5a7af; box-shadow: 0 5px 12px rgba(55,43,47,.07); transform: translateY(-1px); }
+.model-incident-records table { min-width: 820px; }
+.model-incident-records th { padding-top: 9px; padding-bottom: 9px; font-size: 10px; }
+.model-incident-records td { overflow-wrap: anywhere; line-height: 1.4; }
+.model-incident-records tr:not(.clickable-row) { cursor: default; }
+.model-incident-records .clickable-row:hover { background: #f5f8ff; }
+.model-incident-records .clickable-row:focus-visible { position: relative; outline: 2px solid var(--blue); outline-offset: -2px; background: #f5f8ff; }
+.model-incident-launched { box-shadow: 0 6px 18px rgba(182,60,74,.075); }
+.model-incident-metrics .metric:first-child { background: #fff7f8; }
+.model-incident-metrics .metric:nth-child(2) { background: #fffaf0; }
+.model-incident-metrics .metric:nth-child(n+3) { background: #fafbfc; }
+.model-incident-recall-stages span:not(.active) { opacity: .55; }
+.model-incident-audit { box-shadow: 0 4px 12px rgba(24,122,80,.05); }
+
+@media (max-width: 1280px) {
+  .policy-upload-page .policy-result-grid { grid-template-columns: 1fr 1fr; }
+  .policy-upload-page .policy-analysis-action { align-items: flex-start; flex-direction: column; }
+  .policy-upload-page .policy-analysis-action .button { align-self: flex-end; }
+  .policy-upload-page .policy-file-copy strong { white-space: normal; overflow-wrap: anywhere; }
+  .policy-analysis-page .policy-analysis-original blockquote { max-width: none; }
+  .policy-analysis-page .policy-confidence { grid-template-columns: auto 1fr auto; }
+  .policy-patch-workflow > div.current > span { width: 26px; height: 26px; }
+  .policy-patch-version { flex-wrap: wrap; }
+  .policy-patch-approved dl { gap: 12px; }
+  .model-incident-scan-results { grid-template-columns: 1fr 1fr; }
+  .model-incident-scan-results > *:nth-child(3) { border-top: 1px solid var(--line); border-left: 0; }
+  .model-incident-scan-results > *:nth-child(4) { border-top: 1px solid var(--line); }
+  .model-incident-metrics { grid-template-columns: 1fr 1fr; }
+  .model-incident-metrics > div:nth-child(3) { border-top: 1px solid var(--line); border-left: 0; }
+  .model-incident-metrics > div:nth-child(4) { border-top: 1px solid var(--line); }
+  .model-incident-recall-stages { flex-wrap: wrap; gap: 8px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .policy-upload-page .policy-dropzone { transition: none; }
+  .policy-upload-page .policy-stage-list > div { transition: none; }
+  .policy-analysis-page .policy-clause-card { transition: none; }
+  .policy-patch-workflow > div { transition: none; }
+  .policy-patch-actions > div { transition: none; }
+  .model-incident-animation > div { transition: none; }
+  .model-incident-tree-nodes > div { transition: none; }
+  .model-incident-tree-nodes > div:hover { transform: none; }
+}
