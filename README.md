@@ -79,24 +79,20 @@ The prototype demonstrates how an organization could:
 - Preserve original evidence while tracking remediation work.
 - Export a structured recall report as JSON.
 
-### Recommended demo path
-
-1. Open **Policies** and use the prepared Recruitment Policy v1.4 PDF.
-2. Run the staged document analysis and inspect the clause-to-control mapping.
-3. Review the Candidate Screening Agent manifest, resolve its v1.4 ambiguity, and run four recruitment-specific tests.
-4. Activate the agent, process candidate application `ACT-8842`, and complete human review.
-5. Inspect Decision Capsule `PF-2841` and export its evidence.
-6. Replay the decision under proposed Recruitment Policy v1.5.
-7. Create and export Recall `RC-017`.
-
-Use **Help** in the sidebar to find the guided path and reveal the two-step **Reset demo** action.
-
 ## Installation
 
 ### Prerequisites
 
-- Node.js with npm.
-- A modern browser with support for the Web Crypto API.
+- Node.js 20+
+- Python 3.11+
+- A browser with support for the Web Crypto API
+
+### Clone the repository
+
+```bash
+git clone https://github.com/25006675-png/Hackattack_policyforge.git
+cd Hackattack_policyforge
+```
 
 ### Run locally
 
@@ -106,6 +102,8 @@ npm run dev
 ```
 
 Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
+
+---
 
 ### Build and verify
 
@@ -119,45 +117,70 @@ npm run verify:fixtures
 ```bash
 npm run preview
 ```
+---
+### Recommended Workflow
+
+1. Open **Policies** and use the prepared Recruitment Policy v1.4 PDF.
+2. Run the staged document analysis and inspect the clause-to-control mapping.
+3. Review the Candidate Screening Agent manifest, resolve its v1.4 ambiguity, and run four recruitment-specific tests.
+4. Activate the agent, process candidate application `ACT-8842`, and complete human review.
+5. Inspect Decision Capsule `PF-2841` and export its evidence.
+6. Replay the decision under proposed Recruitment Policy v1.5.
+7. Create and export Recall `RC-017`.
+
+> [!Note]
+> The prepared v1.4 and v1.5 PDFs live in `public/policy-docs` and are served to users at `/policy-docs/`.
+> 
+> Use **Help** in the sidebar to find the guided path and reveal the two-step 
 
 ## Tech Stack
 
-| Layer | Technology | Purpose |
-| --- | --- | --- |
-| Frontend | React 19 | Component-based governance interface |
-| Language | TypeScript | Typed application state, fixtures, and component contracts |
-| Build tooling | Vite 8 | Local development, bundling, and production preview |
-| Styling | Plain CSS | Responsive visual system and workflow-specific layouts |
-| Icons | Lucide React | Consistent interface iconography |
-| State | React state and `localStorage` | Deterministic workflow state and browser persistence |
-| Document integrity | Web Crypto API | Browser-side SHA-256 policy fingerprinting |
-| Fixture verification | Node.js scripts | Validate prepared policy PDFs, hashes, and required content |
-| Browser tooling | Puppeteer | Supporting browser and document verification workflows |
+### Frontend
 
-The prepared v1.4 and v1.5 PDFs live in `public/policy-docs` and are served to users at `/policy-docs/`.
+| Layer | Technology 
+| --- | --- | 
+| Logic | React 19 
+| Language | TypeScript 
+| Build tooling | Vite 8 
+| Styling | CSS 
+| State | React state 
+| Document integrity | Web Crypto API 
+
+### Backend
+
+| Layer | Technology 
+| --- | --- | 
+| API | FastAPI
+| PDF Text Extraction | PyMuPDF
+| LLM | OpenAI API
+| Logic | Python
+| Database | Supabase Postgres
+| Auth | Supabase Auth
+| Background jobs | Celery
 
 ## Contribution
 
 Contributions that improve the demonstrator, accessibility, documentation, test coverage, or production architecture are welcome.
 
-1. Fork the repository and create a focused feature branch.
-2. Install dependencies with `npm install`.
-3. Make the change while keeping the primary demo workflow deterministic.
-4. Run the required checks:
-
-   ```bash
-   npm run build
-   npm run verify:fixtures
-   ```
-
-5. Describe the motivation, implementation, and verification results in the pull request.
-
-When adding policy fixtures, keep identifiers, versions, hashes, controls, decision evidence, replay results, and recall data consistent across every screen.
 
 ## Disclaimer
+This project is developed for Hack Attack 3.0.  
+Case Study 3 - AI Governance & Responsible AI in Enterprise
 
-PolicyForge in this repository is a competition prototype and product demonstrator. The current implementation is a frontend-first application that uses prepared fixtures and simulated service responses. It does not include a production policy engine, enterprise authentication, persistent backend database, live HR-system connection, external model execution, large-scale replay infrastructure, or automated regulatory submission.
+### Note
+PolicyForge in this repository is a competition prototype and product demonstrator. The current implementation is a frontend-first application that uses prepared fixtures and simulated service responses. 
 
 The prepared policy documents are synthetic controlled documents and contain no real candidate or company data. The browser verifies their SHA-256 fingerprints before enabling deterministic analysis.
 
 The interface and generated artifacts are intended to demonstrate a responsible AI-governance workflow. They are not legal, compliance, employment, security, or regulatory advice and should not be used as the sole basis for consequential decisions.
+
+### Future Implemention
+
+We will develop PolicyForge from its current demo prototype into a live and fully functional production product. The production version will replace prepared fixtures and simulated operations with secure backend services, persistent databases, real policy ingestion and compilation, enterprise authentication, live AI-agent and business-system integrations, scalable runtime enforcement, durable evidence storage, automated replay and recall workflows, and production-grade monitoring, security, resilience, and disaster recovery.
+
+
+<div align="center">
+  <strong>Developed by team DsAi</strong>
+  <br>
+  <strong><em>© Hack Attack 3.0<em>
+</div>
