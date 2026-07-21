@@ -18,7 +18,7 @@ export function DecisionCapsule({ state, navigate }: { state: DemoState; navigat
   const node = evidenceNodes.find((item) => item.id === selected) ?? evidenceNodes[0]
 
   if (!state.decisionComplete) {
-    return <div className="page-stack"><PageHeader eyebrow="Decision evidence" title="Decision Capsules" description="Trace consequential AI-assisted outcomes from recorded facts to external consequence." /><Panel><div className="locked-empty"><LockKeyhole size={27} /><h2>No completed decision in this demo</h2><p>Process the prepared candidate application and complete human review to create Decision Capsule PF-2841.</p><Button onClick={() => navigate('action')}>Open governed action</Button></div></Panel></div>
+    return <div className="page-stack"><PageHeader eyebrow="Decision evidence" title="Decision Capsules" description="Trace consequential AI-assisted outcomes from recorded facts to external consequence." /><Panel><div className="locked-empty"><LockKeyhole size={27} /><h2>No completed decision available</h2><p>Process the candidate application and complete human review to create Decision Capsule PF-2841.</p><Button onClick={() => navigate('action')}>Open governed action</Button></div></Panel></div>
   }
 
   return (
@@ -27,7 +27,7 @@ export function DecisionCapsule({ state, navigate }: { state: DemoState; navigat
         eyebrow="Decision Capsule · PF-2841"
         title="Candidate application outcome"
         description="A structured reconstruction of evidence, policy, and responsibility."
-        actions={<><Button variant="secondary" icon={<Download size={15} />} onClick={() => downloadJsonArtifact('PF-2841-evidence.json', { capsuleId: 'PF-2841', applicationId: 'APP-8842', agent: 'Candidate Screening Agent v2.1', model: 'TalentModel v4.2', policy: 'Recruitment Policy v1.4', policyDocument: 'POL-HR-014', reviewer: 'Maya Chen', outcome: 'Did not proceed', evidence: evidenceNodes })}>Export evidence JSON</Button><a className="button button-secondary" href="/demo-policies/Northstar-Recruitment-Policy-v1.4.pdf" target="_blank" rel="noreferrer"><ExternalLink size={15} /><span>Open source policy</span></a></>}
+        actions={<><Button variant="secondary" icon={<Download size={15} />} onClick={() => downloadJsonArtifact('PF-2841-evidence.json', { capsuleId: 'PF-2841', applicationId: 'APP-8842', agent: 'Candidate Screening Agent v2.1', model: 'TalentModel v4.2', policy: 'Recruitment Policy v1.4', policyDocument: 'POL-HR-014', reviewer: 'Maya Chen', outcome: 'Did not proceed', evidence: evidenceNodes })}>Export evidence JSON</Button><a className="button button-secondary" href="/policy-docs/Northstar-Recruitment-Policy-v1.4.pdf" target="_blank" rel="noreferrer"><ExternalLink size={15} /><span>Open source policy</span></a></>}
       />
 
       <div className="capsule-meta">

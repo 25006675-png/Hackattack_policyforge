@@ -7,6 +7,8 @@ import {
 import type { DemoState, Screen } from '../types'
 import { Badge, Button, Metric, PageHeader, Panel, ProgressBar } from '../components/ui'
 
+const STAGE_DURATION_MS = 3000
+
 export function TimeMachine({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [running, setRunning] = useState(false)
   const [replayStep, setReplayStep] = useState(0)
@@ -24,12 +26,12 @@ export function TimeMachine({ state, update, navigate }: { state: DemoState; upd
     clearTimers()
     setRunning(true)
     setReplayStep(0)
-    replaySteps.forEach((_, index) => timerIds.current.push(window.setTimeout(() => setReplayStep(index + 1), 620 * (index + 1))))
+    replaySteps.forEach((_, index) => timerIds.current.push(window.setTimeout(() => setReplayStep(index + 1), STAGE_DURATION_MS * (index + 1))))
     timerIds.current.push(window.setTimeout(() => {
       setRunning(false)
       update({ replayComplete: true })
       timerIds.current = []
-    }, 2850))
+    }, STAGE_DURATION_MS * replaySteps.length + 250))
   }
 
   return (
@@ -38,7 +40,7 @@ export function TimeMachine({ state, update, navigate }: { state: DemoState; upd
         eyebrow="Policy replay · PR-005"
         title="Policy Time Machine"
         description="Test a proposed policy against historical decisions before it is deployed."
-        actions={<><Badge tone="violet" dot>Deterministic replay</Badge><a className="button button-secondary" href="/demo-policies/Northstar-Recruitment-Policy-v1.5-Proposed.pdf" target="_blank" rel="noreferrer"><FileText size={15} /><span>Open Policy v1.5 PDF</span></a></>}
+        actions={<><Badge tone="violet" dot>Deterministic replay</Badge><a className="button button-secondary" href="/policy-docs/Northstar-Recruitment-Policy-v1.5-Proposed.pdf" target="_blank" rel="noreferrer"><FileText size={15} /><span>Open Policy v1.5 PDF</span></a></>}
       />
 
       <div className="simulation-banner"><FileClock size={17} /><span><strong>Deterministic counterfactual analysis</strong> The replay worker evaluates stored action contexts against an immutable v1.5 policy snapshot. It does not alter original decisions or reverse real-world outcomes.</span></div>
@@ -56,7 +58,7 @@ export function TimeMachine({ state, update, navigate }: { state: DemoState; upd
           <div className="replay-setup">
             <div><span>Historical period</span><strong>January – June 2026</strong></div><div><span>Agent</span><strong>Candidate Screening Agent</strong></div><div><span>Decisions</span><strong>2,841</strong></div><div><span>Comparison</span><strong>Policy v1.4 → v1.5</strong></div>
           </div>
-          {running ? <div className="replay-running"><div className="replay-pulse"><RefreshCw size={23} /></div><div><strong>{replaySteps[Math.min(replayStep, replaySteps.length - 1)]}…</strong><ProgressBar value={(replayStep / replaySteps.length) * 100} tone="violet" /><span>{Math.min(replayStep, replaySteps.length)} of {replaySteps.length} stages complete</span></div></div> : <div className="replay-action"><div><History size={21} /><span><strong>Ready to replay 2,841 decisions</strong><small>Representative historical data · Estimated runtime 4 seconds</small></span></div><Button onClick={runReplay} icon={<Play size={15} />}>Run historical replay</Button></div>}
+          {running ? <div className="replay-running"><div className="replay-pulse"><RefreshCw size={23} /></div><div><strong>{replaySteps[Math.min(replayStep, replaySteps.length - 1)]}…</strong><ProgressBar value={(replayStep / replaySteps.length) * 100} tone="violet" /><span>{Math.min(replayStep, replaySteps.length)} of {replaySteps.length} stages complete</span></div></div> : <div className="replay-action"><div><History size={21} /><span><strong>Ready to replay 2,841 decisions</strong><small>Historical decision records · Estimated runtime 12 seconds</small></span></div><Button onClick={runReplay} icon={<Play size={15} />}>Run historical replay</Button></div>}
         </Panel>
       ) : (
         <>

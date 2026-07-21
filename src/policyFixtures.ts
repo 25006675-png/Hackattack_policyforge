@@ -1,15 +1,15 @@
 import type { PolicyAnalysisStage, PolicyFixture } from './types'
 
 export const policyAnalysisStages: PolicyAnalysisStage[] = [
-  { label: 'Verifying document integrity', detail: 'SHA-256 fingerprint matched to controlled policy POL-HR-014.', duration: 620 },
-  { label: 'Extracting document structure', detail: '6 pages, 10 sections, 2 tables, and document-control metadata indexed.', duration: 760 },
-  { label: 'Resolving policy scope and version', detail: 'Recruitment scope, People and Culture owner, and policy status identified.', duration: 680 },
-  { label: 'Identifying requirements', detail: 'Obligations, prohibitions, conditions, and exceptions normalized.', duration: 840 },
-  { label: 'Classifying governance entities', detail: '5 candidate-data categories, 4 actors, and 7 consequential actions mapped.', duration: 760 },
-  { label: 'Mapping the Agent Manifest', detail: 'Northstar ATS, TalentModel API, agent tools, and permissions evaluated.', duration: 860 },
-  { label: 'Checking ambiguity and conflicts', detail: 'Reviewer-role ambiguity detected; no blocking cross-clause conflict found.', duration: 720 },
-  { label: 'Compiling runtime controls', detail: 'Policy IR compiled into cited ALLOW, TRANSFORM, HUMAN REVIEW, and BLOCK decisions.', duration: 920 },
-  { label: 'Validating scenario coverage', detail: 'Four representative recruitment paths evaluated against the draft control set.', duration: 800 },
+  { label: 'Verifying document integrity', detail: 'Calculating SHA-256, confirming registered source, and locking version POL-HR-014.', duration: 3000 },
+  { label: 'Extracting document structure', detail: 'Rendering 6 pages, reading headings, tables, clause numbers, and document-control metadata.', duration: 3000 },
+  { label: 'Resolving policy scope and version', detail: 'Identifying recruitment scope, People and Culture ownership, approval status, and effective date.', duration: 3000 },
+  { label: 'Identifying requirements', detail: 'Separating obligations, prohibitions, exceptions, reviewer duties, and candidate-notice requirements.', duration: 3000 },
+  { label: 'Classifying governance entities', detail: 'Mapping candidate-data categories, accountable actors, external systems, and consequential actions.', duration: 3000 },
+  { label: 'Mapping the Agent Manifest', detail: 'Comparing Northstar ATS access, TalentModel calls, agent tools, and write permissions against policy clauses.', duration: 3000 },
+  { label: 'Checking ambiguity and conflicts', detail: 'Testing reviewer-role ambiguity, exception handling, and cross-clause conflicts before compilation.', duration: 3000 },
+  { label: 'Compiling runtime controls', detail: 'Building cited ALLOW, TRANSFORM, HUMAN REVIEW, and BLOCK decisions for runtime evaluation.', duration: 3000 },
+  { label: 'Validating scenario coverage', detail: 'Running recruitment control paths against the compiled Policy IR before releasing analysis results.', duration: 3000 },
 ]
 
 const sharedClauses = [
@@ -47,8 +47,8 @@ export const policyFixtures: Record<'recruitment-v1.4' | 'recruitment-v1.5', Pol
   'recruitment-v1.4': {
     id: 'recruitment-v1.4',
     fileName: 'Northstar-Recruitment-Policy-v1.4.pdf',
-    assetPath: '/demo-policies/Northstar-Recruitment-Policy-v1.4.pdf',
-    sha256: 'CDBD208DACE4FCB100AEBEC556E6189D26410F8FB3D5C8DCE8DECF337CC7E57E',
+    assetPath: '/policy-docs/Northstar-Recruitment-Policy-v1.4.pdf',
+    sha256: '712534DBFDEA6B1EED73AA83EF0D1D04681AAF50426BB5FEE11718950EAA8184',
     version: '1.4', status: 'Active', documentId: 'POL-HR-014', owner: 'Director of Human Resources',
     accountableExecutive: 'Chief People Officer', pageCount: 6, effectiveDate: '3 January 2026',
     clausesDetected: 12, automaticControls: 8, humanReviewControls: 3, ambiguities: 1,
@@ -67,8 +67,8 @@ export const policyFixtures: Record<'recruitment-v1.4' | 'recruitment-v1.5', Pol
   'recruitment-v1.5': {
     id: 'recruitment-v1.5',
     fileName: 'Northstar-Recruitment-Policy-v1.5-Proposed.pdf',
-    assetPath: '/demo-policies/Northstar-Recruitment-Policy-v1.5-Proposed.pdf',
-    sha256: 'BA1DE445C2196DF951FC6E6F0A633FD2ECA1EB924A31F32CC2656EC38CB758E3',
+    assetPath: '/policy-docs/Northstar-Recruitment-Policy-v1.5-Proposed.pdf',
+    sha256: 'BE2F380CDE81D22F5A601B19D3177AA7080A67BC00CCA128428AAFBC5DD5722A',
     version: '1.5', status: 'Proposed', documentId: 'POL-HR-014', owner: 'Director of Human Resources',
     accountableExecutive: 'Chief People Officer', pageCount: 6, effectiveDate: 'Proposed 1 August 2026',
     clausesDetected: 13, automaticControls: 9, humanReviewControls: 3, ambiguities: 0,
@@ -85,8 +85,6 @@ export const policyFixtures: Record<'recruitment-v1.4' | 'recruitment-v1.5', Pol
     ],
   },
 }
-
-export const preparedPolicies = Object.values(policyFixtures)
 
 export const recruitmentScenarioTests = [
   { title: 'Rank candidates using job-related qualifications', expected: 'ALLOW', result: 'Passed', tone: 'success' as const },

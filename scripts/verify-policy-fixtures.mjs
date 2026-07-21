@@ -3,16 +3,16 @@ import { readFile } from 'node:fs/promises'
 
 const fixtures = [
   {
-    pdf: 'public/demo-policies/Northstar-Recruitment-Policy-v1.4.pdf',
+    pdf: 'public/policy-docs/Northstar-Recruitment-Policy-v1.4.pdf',
     source: 'scripts/policy-docs/v1.4.html',
-    sha256: 'cdbd208dace4fcb100aebec556e6189d26410f8fb3d5c8dce8decf337cc7e57e',
+    sha256: '712534dbfdea6b1eed73aa83ef0d1d04681aaf50426bb5fee11718950eaa8184',
     version: '1.4',
     requiredTerms: ['Candidate Screening Agent', 'Agent Manifest', 'Decision Capsule', 'human review'],
   },
   {
-    pdf: 'public/demo-policies/Northstar-Recruitment-Policy-v1.5-Proposed.pdf',
+    pdf: 'public/policy-docs/Northstar-Recruitment-Policy-v1.5-Proposed.pdf',
     source: 'scripts/policy-docs/v1.5.html',
-    sha256: 'ba1de445c2196df951fc6e6f0a633fd2eca1eb924a31f32cc2656ec38cb758e3',
+    sha256: 'be2f380cde81d22f5a601b19d3177aa7080a67bc00cca128428aafbc5dd5722a',
     version: '1.5',
     requiredTerms: ['documented caregiving', 'Agent Manifest', 'Decision Capsule', 'human review', 'Policy Replay PR-005'],
   },

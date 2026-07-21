@@ -72,7 +72,7 @@ export function AppShell({ screen, onNavigate, onReset, children }: { screen: Sc
         </nav>
 
         <div className="sidebar-foot">
-          <button ref={helpButton} aria-label="Help and demo controls" onClick={openHelp}><HelpCircle size={19} strokeWidth={1.8} /><span className="rail-label">Help</span></button>
+          <button ref={helpButton} aria-label="Help and reset controls" onClick={openHelp}><HelpCircle size={19} strokeWidth={1.8} /><span className="rail-label">Help</span></button>
           <div className="user-rail-button" aria-label="Signed in as Maya Chen"><span className="user-avatar">MC</span><span className="rail-label">Maya</span></div>
         </div>
       </aside>
@@ -106,9 +106,9 @@ export function AppShell({ screen, onNavigate, onReset, children }: { screen: Sc
         <div className="help-dialog-shell">
           <header><div><span>PolicyForge support</span><h2 id="help-dialog-title">Demo guide and architecture</h2></div><button type="button" aria-label="Close help" onClick={closeHelp}><X size={18} /></button></header>
           <div className="help-dialog-content">
-            <section><h3>Recommended demo path</h3><ol><li>Analyse Recruitment Policy v1.4.</li><li>Map controls to Candidate Screening Agent.</li><li>Govern candidate action ACT-8842.</li><li>Inspect Decision Capsule PF-2841.</li><li>Replay Policy v1.5 and create Recall RC-017.</li></ol></section>
+            <section><h3>Recommended workflow</h3><ol><li>Analyse Recruitment Policy v1.4.</li><li>Map controls to Candidate Screening Agent.</li><li>Govern candidate action ACT-8842.</li><li>Inspect Decision Capsule PF-2841.</li><li>Replay Policy v1.5 and create Recall RC-017.</li></ol></section>
             <section><h3>Technical architecture</h3><p>The Document Ingestion Service produces a versioned Policy IR. The Policy Compiler combines it with the Agent Manifest. At runtime, the PEP intercepts an action and the PDP returns ALLOW, TRANSFORM, HUMAN REVIEW, or BLOCK with cited evidence.</p></section>
-            <section><h3>Offline demonstration boundary</h3><p>This build recognizes two prepared policy documents by SHA-256 fingerprint. Production deployments connect document extraction, runtime telemetry, append-only evidence storage, deterministic replay, and idempotent recall services.</p></section>
+            <section><h3>Execution boundary</h3><p>This environment recognizes registered policy documents by SHA-256 fingerprint. Production deployments connect document extraction, runtime telemetry, append-only evidence storage, deterministic replay, and idempotent recall services.</p></section>
           </div>
           <footer className="help-demo-controls">
             <div><strong>Demo controls</strong><span>Reset clears policy analysis and every completed workflow state.</span></div>

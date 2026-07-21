@@ -28,6 +28,6 @@ npm run verify:fixtures
 6. Replay the decision under proposed Recruitment Policy v1.5.
 7. Create and export Recall `RC-017`.
 
-The prepared v1.4 and v1.5 PDFs live in `public/demo-policies`. They are synthetic controlled documents and contain no real candidate or company data. The browser verifies their SHA-256 fingerprints before enabling deterministic analysis.
+The prepared v1.4 and v1.5 PDFs live in `public/policy-docs` and are served to users at `/policy-docs/`. They are synthetic controlled documents and contain no real candidate or company data. The browser verifies their SHA-256 fingerprints before enabling deterministic analysis.
 
 Use **Help** in the sidebar to find the guided path and reveal the two-step **Reset demo** action.

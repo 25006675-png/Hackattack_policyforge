@@ -17,6 +17,8 @@ const steps = [
   { title: 'Authorized reviewer assigned', detail: 'Maya Chen · Senior Recruitment Lead', icon: UserCheck, result: 'ASSIGNED' },
 ]
 
+const STAGE_DURATION_MS = 3000
+
 export function GovernedAction({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(state.actionComplete ? steps.length : 0)
@@ -36,12 +38,12 @@ export function GovernedAction({ state, update, navigate }: { state: DemoState; 
     clearTimers()
     setRunning(true)
     setProgress(0)
-    steps.forEach((_, index) => timerIds.current.push(window.setTimeout(() => setProgress(index + 1), 480 * (index + 1))))
+    steps.forEach((_, index) => timerIds.current.push(window.setTimeout(() => setProgress(index + 1), STAGE_DURATION_MS * (index + 1))))
     timerIds.current.push(window.setTimeout(() => {
       setRunning(false)
       update({ actionComplete: true })
       timerIds.current = []
-    }, 480 * steps.length + 220))
+    }, STAGE_DURATION_MS * steps.length + 250))
   }
 
   const approve = () => {
@@ -89,7 +91,7 @@ export function GovernedAction({ state, update, navigate }: { state: DemoState; 
               )
             })}
           </div>
-          {progress === 0 && !running && state.agentActive && <div className="execution-empty"><Clock3 size={20} /><p>ACT-8842 is prepared with representative candidate data. No external service or real candidate record will be contacted.</p></div>}
+          {progress === 0 && !running && state.agentActive && <div className="execution-empty"><Clock3 size={20} /><p>ACT-8842 is queued for policy evaluation. No external service or candidate system will be contacted from this environment.</p></div>}
         </Panel>
 
         <aside className={`review-panel ${progress === steps.length ? 'visible' : ''}`}>
@@ -115,18 +117,20 @@ export function GovernedAction({ state, update, navigate }: { state: DemoState; 
                 <div className="negative-factor"><span>Employment gap</span><strong>18 months</strong><small>Classified as unexplained · 71% confidence</small></div>
               </div>
               <div className="reviewer"><span className="avatar">MC</span><div><span>Assigned reviewer</span><strong>Maya Chen</strong><small>Senior Recruitment Lead · Eligible under clause 7.3</small></div></div>
-              {reassessmentRequested ? <div className="review-reassessment" role="status"><CircleAlert size={17} /><div><strong>Reassessment draft created</strong><span>No outcome was issued. Return to the review if you want to continue the prepared pitch path.</span></div><Button variant="secondary" onClick={() => setReassessmentRequested(false)}>Resume review</Button></div> : <div className="review-actions"><Button variant="secondary" onClick={() => setReassessmentRequested(true)}>Return for reassessment</Button><Button onClick={approve} icon={<UserRound size={15} />}>Approve recommendation</Button></div>}
+              {reassessmentRequested ? <div className="review-reassessment" role="status"><CircleAlert size={17} /><div><strong>Reassessment draft created</strong><span>No outcome was issued. Resume review to continue the current workflow.</span></div><Button variant="secondary" onClick={() => setReassessmentRequested(false)}>Resume review</Button></div> : <div className="review-actions"><Button variant="secondary" onClick={() => setReassessmentRequested(true)}>Return for reassessment</Button><Button onClick={approve} icon={<UserRound size={15} />}>Approve recommendation</Button></div>}
               <p className="review-note"><LockKeyhole size={13} /> Your decision and identity will be appended to the evidence record.</p>
             </>
           )}
         </aside>
       </div>
 
-      <Panel title="Application context" className="application-context">
-        <div><BriefcaseBusiness size={17} /><span>Role</span><strong>Senior Product Analyst</strong></div>
-        <div><Fingerprint size={17} /><span>Candidate</span><strong>PF candidate 2841</strong></div>
-        <div><UserCheck size={17} /><span>Hiring team</span><strong>Product Strategy</strong></div>
-        <div><Clock3 size={17} /><span>Received</span><strong>12 June 2026 · 09:41</strong></div>
+      <Panel title="Application context" className="application-context-panel">
+        <div className="application-context">
+          <div><BriefcaseBusiness size={17} /><span>Role</span><strong>Senior Product Analyst</strong></div>
+          <div><Fingerprint size={17} /><span>Candidate</span><strong>PF candidate 2841</strong></div>
+          <div><UserCheck size={17} /><span>Hiring team</span><strong>Product Strategy</strong></div>
+          <div><Clock3 size={17} /><span>Received</span><strong>12 June 2026 · 09:41</strong></div>
+        </div>
       </Panel>
     </div>
   )

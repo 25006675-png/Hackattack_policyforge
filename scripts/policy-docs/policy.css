@@ -30,11 +30,11 @@ li { margin-bottom: 1.7mm; }
 .meta-grid > div { min-height: 15mm; padding: 3mm 4mm; border-bottom: .25mm solid #dce1e9; }
 .meta-grid > div:nth-child(odd) { border-right: .25mm solid #dce1e9; }
 .meta-grid > div:nth-last-child(-n+2) { border-bottom: 0; }
-.meta-grid span, .document-table th { display: block; color: #6a7688; font-size: 7.5pt; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.meta-grid span { display: block; color: #6a7688; font-size: 7.5pt; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .meta-grid strong { display: block; margin-top: 1.5mm; color: #273650; font-size: 9.2pt; }
 .document-table { width: 100%; margin-top: 4mm; border-collapse: collapse; }
 .document-table th, .document-table td { padding: 3mm; border: .25mm solid #d6dce6; text-align: left; vertical-align: top; }
-.document-table th { background: #f3f5f8; }
+.document-table th { background: #f3f5f8; color: #6a7688; font-size: 7.5pt; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .document-table td { color: #35435a; font-size: 8.7pt; line-height: 1.45; }
 .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 0 9mm; margin-top: 4mm; }
 .toc div { display: flex; justify-content: space-between; gap: 3mm; padding: 2.6mm 0; border-bottom: .25mm solid #dce1e8; color: #33435a; font-size: 9pt; }

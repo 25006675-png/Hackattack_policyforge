@@ -15,6 +15,8 @@ const cases = [
   ['PF-2551', 'Candidate 2551', 'Caregiving leave', 'Awaiting reassessment', 'Unassigned'],
 ]
 
+const STAGE_DURATION_MS = 3000
+
 export function Recalls({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [creating, setCreating] = useState(false)
   const [createdNow, setCreatedNow] = useState(false)
@@ -31,7 +33,7 @@ export function Recalls({ state, update, navigate }: { state: DemoState; update:
       setCreatedNow(true)
       update({ recallCreated: true })
       createTimer.current = null
-    }, 1300)
+    }, STAGE_DURATION_MS)
   }
 
   if (!state.replayComplete) {
@@ -73,9 +75,9 @@ export function Recalls({ state, update, navigate }: { state: DemoState; update:
       <div className="recall-meta"><div><span>Source</span><strong>Policy Replay PR-005</strong></div><div><span>Accountable owner</span><strong>Director of Human Resources</strong></div><div><span>Created</span><strong>19 Jul 2026 · 11:24</strong></div><div><span>Target</span><strong>14 Aug 2026</strong></div><div><span>Status</span><Badge tone="warning">Reassessment</Badge></div></div>
       <div className="metric-grid"><Metric label="Decisions identified" value="73" tone="danger" /><Metric label="Awaiting reassessment" value="73" tone="warning" /><Metric label="Reviewed" value="0" /><Metric label="Corrected" value="0" /></div>
       <Panel title="Recall progress" action={<span className="progress-percent">0% complete</span>}><div className="recall-stage-labels"><span className="active"><i>1</i>Scope confirmed</span><span><i>2</i>Cases assigned</span><span><i>3</i>Independent review</span><span><i>4</i>Corrections recorded</span><span><i>5</i>Recall closed</span></div><ProgressBar value={7} tone="danger" /></Panel>
-      <Panel title="Affected decisions" description="Prepared records show how original outcomes remain visible while reassessment is performed.">
+      <Panel title="Affected decisions" description="Original outcomes remain visible while reassessment is performed.">
         <div className="table-wrap"><table><thead><tr><th>Decision</th><th>Candidate</th><th>Changed factor</th><th>Remediation status</th><th>Reviewer</th></tr></thead><tbody>{cases.map(([id, candidate, factor, status, reviewer]) => <tr key={id} className={id === 'PF-2841' ? 'clickable-row' : ''} tabIndex={id === 'PF-2841' ? 0 : undefined} aria-label={id === 'PF-2841' ? 'Open Decision Capsule PF-2841' : undefined} onClick={() => id === 'PF-2841' && navigate('decisions')} onKeyDown={(event) => { if (id === 'PF-2841' && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); navigate('decisions') } }}><td><strong className="mono">{id}</strong></td><td>{candidate}</td><td>{factor}</td><td><Badge tone={status === 'Notice flagged' ? 'danger' : 'warning'} dot>{status}</Badge></td><td>{reviewer === 'Unassigned' ? <span className="muted">Unassigned</span> : <span className="reviewer-cell"><span>{reviewer.split(' ').map((n) => n[0]).join('')}</span>{reviewer}</span>}</td></tr>)}</tbody></table></div>
-        <div className="table-footer"><span>Showing 4 representative records from the 73-case recall scope.</span></div>
+        <div className="table-footer"><span>Showing 4 records from the 73-case recall scope.</span></div>
       </Panel>
       <div className="recall-audit"><Clock3 size={17} /><div><strong>Original evidence is immutable</strong><span>Every reassessment and correction will be recorded as a new event alongside the original Decision Capsule.</span></div><Badge tone="success">Audit ready</Badge></div>
     </div>

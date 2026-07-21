@@ -18,6 +18,8 @@ function outcomeTone(outcome: string): Tone {
   return 'violet'
 }
 
+const STAGE_DURATION_MS = 3000
+
 export function AgentGovernance({ state, policyFile, policyAnalysisComplete, update, navigate }: { state: DemoState; policyFile: PolicyFile | null; policyAnalysisComplete: boolean; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisStep, setAnalysisStep] = useState(0)
@@ -27,7 +29,7 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
   const analysisTimerIds = useRef<number[]>([])
   const simulationTimerIds = useRef<number[]>([])
   const analysisLabels = ['Inspecting capabilities', 'Mapping accessed data', 'Finding applicable policies', 'Generating controls']
-  const simulationStages = ['Generating representative scenarios', 'Applying generated controls', 'Checking conflicting outcomes', 'Measuring policy coverage', 'Identifying loopholes']
+  const simulationStages = ['Generating control scenarios', 'Applying generated controls', 'Checking conflicting outcomes', 'Measuring policy coverage', 'Identifying loopholes']
   const hasCompletedPolicyAnalysis = policyFile !== null && policyAnalysisComplete
   const policyFixture = getPolicyFixture(policyFile)
 
@@ -51,12 +53,12 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
     clearAnalysisTimers()
     setAnalyzing(true)
     setAnalysisStep(0)
-    analysisLabels.forEach((_, index) => analysisTimerIds.current.push(window.setTimeout(() => setAnalysisStep(index + 1), 450 * (index + 1))))
+    analysisLabels.forEach((_, index) => analysisTimerIds.current.push(window.setTimeout(() => setAnalysisStep(index + 1), STAGE_DURATION_MS * (index + 1))))
     analysisTimerIds.current.push(window.setTimeout(() => {
       setAnalyzing(false)
       update({ agentAnalyzed: true })
       analysisTimerIds.current = []
-    }, 2150))
+    }, STAGE_DURATION_MS * analysisLabels.length + 250))
   }
 
   const runSimulation = () => {
@@ -64,11 +66,11 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
     update({ testsComplete: false })
     setSimulationRunning(true)
     setSimulationStage(0)
-    simulationStages.forEach((_, index) => simulationTimerIds.current.push(window.setTimeout(() => setSimulationStage(index + 1), 500 * (index + 1))))
+    simulationStages.forEach((_, index) => simulationTimerIds.current.push(window.setTimeout(() => setSimulationStage(index + 1), STAGE_DURATION_MS * (index + 1))))
     simulationTimerIds.current.push(window.setTimeout(() => {
       setSimulationRunning(false)
       update({ testsComplete: true })
-    }, 500 * simulationStages.length + 250))
+    }, STAGE_DURATION_MS * simulationStages.length + 250))
   }
 
   const deploy = () => update({ agentActive: true })
@@ -194,7 +196,7 @@ export function AgentGovernance({ state, policyFile, policyAnalysisComplete, upd
             </Panel>
           </div>
 
-          {state.testsComplete && <Panel title="Recruitment control verification" description="Deterministic test fixtures prove each runtime outcome before deployment." className="simulation-results-panel">
+          {state.testsComplete && <Panel title="Recruitment control verification" description="Deterministic control tests prove each runtime outcome before deployment." className="simulation-results-panel">
             <div className="simulation-metrics"><Metric label="Scenarios tested" value="4" tone="violet" /><Metric label="Expected outcomes" value="4" tone="success" /><Metric label="Unresolved conflicts" value="0" tone="success" /><Metric label="Coverage" value="100%" tone="success" /></div>
             <div className="simulation-scenario-list">{recruitmentScenarioTests.map((scenario, index) => <div key={scenario.title}><span className="simulation-number">{index + 1}</span><div><small>Human Resources · Recruitment Policy v1.4</small><strong>{scenario.title}</strong></div><Badge tone={outcomeTone(scenario.expected)}>{scenario.expected}</Badge><Badge tone={scenario.tone}>{scenario.result}</Badge></div>)}</div>
           </Panel>}

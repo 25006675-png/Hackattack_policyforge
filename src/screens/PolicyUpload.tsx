@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
-import { Check, CheckCircle2, Download, FileCheck2, FileSearch, FileText, Fingerprint, ShieldCheck, Sparkles, UploadCloud, X } from 'lucide-react'
-import { policyAnalysisStages, preparedPolicies } from '../policyFixtures'
+import { Check, CheckCircle2, FileCheck2, FileSearch, FileText, Fingerprint, ShieldCheck, Sparkles, UploadCloud, X } from 'lucide-react'
+import { policyAnalysisStages } from '../policyFixtures'
 import { formatDigest, getPolicyFixture, identifyPolicyFile, loadPreparedPolicy } from '../services/policyDemo'
 import type { PolicyFile, PolicyFixtureId, Screen } from '../types'
 import { Badge, Button, PageHeader, Panel, ProgressBar } from '../components/ui'
@@ -62,7 +62,7 @@ export function PolicyUpload({ policyFile, policyAnalysisComplete, onPolicyFileC
     try {
       acceptIdentifiedFile(await loadPreparedPolicy(id))
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'The prepared policy could not be loaded.')
+      setError(loadError instanceof Error ? loadError.message : 'The policy document could not be loaded.')
     } finally {
       setIdentifying(false)
     }
@@ -105,32 +105,27 @@ export function PolicyUpload({ policyFile, policyAnalysisComplete, onPolicyFileC
 
   return (
     <div className="page-stack policy-upload-page">
-      <PageHeader eyebrow="Policy intake · Document Ingestion Service" title="Analyse a controlled recruitment policy" description="Verify a prepared policy, build a cited Policy IR, and map its requirements to the Candidate Screening Agent Manifest." actions={<Badge tone="violet" dot>Content-verified offline demo</Badge>} />
-
-      <Panel title="Prepared policy documents" description="Download the exact documents used throughout the governance, replay, and recall workflow.">
-        <div className="prepared-policy-list">
-          {preparedPolicies.map((policy) => <article key={policy.id} className={policy.status === 'Active' ? 'active' : ''}><div className="prepared-policy-icon"><FileText size={20} /></div><div><div className="prepared-policy-title"><strong>Recruitment Policy v{policy.version}</strong><Badge tone={policy.status === 'Active' ? 'success' : 'violet'}>{policy.status}</Badge></div><span>{policy.fileName}</span><small>{policy.pageCount} pages · {policy.documentId} · {policy.owner}</small></div><div className="prepared-policy-actions"><a className="button button-ghost" href={policy.assetPath} download={policy.fileName}><Download size={15} /><span>Download PDF</span></a><Button variant={policy.status === 'Active' ? 'primary' : 'secondary'} disabled={identifying} onClick={() => void selectPrepared(policy.id)}>{policy.status === 'Active' ? 'Use v1.4 sample' : 'Inspect v1.5'}</Button></div></article>)}
-        </div>
-      </Panel>
+      <PageHeader eyebrow="Policy intake · Document Ingestion Service" title="Analyse a controlled recruitment policy" description="Verify policy integrity, build a cited Policy IR, and map requirements to the Candidate Screening Agent Manifest." actions={<Badge tone="violet" dot>Document control</Badge>} />
 
       <div className="policy-upload-layout">
-        <Panel title="Policy document" description="PDF only. Prepared files are verified by SHA-256 before analysis.">
+        <Panel title="Policy document" description="PDF only. Registered policy files are verified by SHA-256 before analysis.">
           {!policyFile ? <>
             <button className={`policy-dropzone ${isDragging ? 'dragging' : ''}`} type="button" onClick={() => inputRef.current?.click()} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true) }} onDragOver={(event) => event.preventDefault()} onDragLeave={(event) => { event.preventDefault(); setIsDragging(false) }} onDrop={(event: DragEvent<HTMLButtonElement>) => { event.preventDefault(); setIsDragging(false); void selectFile(event.dataTransfer.files[0]) }}>
               <span className="policy-upload-icon"><UploadCloud size={23} /></span><strong className="policy-upload-drop-title">Drop a controlled policy PDF</strong><span className="policy-upload-drop-copy">or choose a file from this computer</span><span className="button button-secondary"><FileText size={15} /> Choose PDF</span>
             </button>
             <input ref={inputRef} className="policy-file-input" type="file" accept="application/pdf,.pdf" onChange={onInputChange} />
+            <div className="policy-registry-action"><div><strong>Registered active policy</strong><span>POL-HR-014 · Recruitment Policy v1.4</span></div><Button variant="secondary" disabled={identifying} onClick={() => void selectPrepared('recruitment-v1.4')}>Load active policy</Button></div>
           </> : <>
             <div className="policy-file-card"><span className="policy-upload-file-icon"><FileText size={23} /></span><div className="policy-file-copy"><strong>{policyFile.name}</strong><small>{formatFileSize(policyFile.size)} · {policyFile.type}</small><span className="policy-digest"><Fingerprint size={12} /> SHA-256 {formatDigest(policyFile.sha256)}</span></div><Button variant="ghost" aria-label="Remove selected policy" title="Remove selected policy" onClick={removePolicy} icon={<X size={16} />} /></div>
-            {fixture ? <div className="policy-identity-card"><FileCheck2 size={18} /><div><strong>Controlled document verified</strong><span>{fixture.documentId} · Version {fixture.version} · {fixture.status}</span></div><Badge tone="success">Hash matched</Badge></div> : <div className="policy-unsupported" role="status"><FileSearch size={19} /><div><strong>Document not recognized by the offline fixture registry</strong><p>The file is valid, but this build cannot run semantic extraction for arbitrary documents. Use one of the prepared Northstar policies above. A production deployment would send this file to the Document Ingestion Service.</p></div></div>}
-            <div className="policy-analysis-action"><small>{fixture ? `Ready to compile ${fixture.documentId} v${fixture.version} into Policy IR.` : 'No prepared analysis will be generated for this document.'}</small><Button loading={isAnalyzing || identifying} disabled={!fixture || isAnalyzing || identifying} onClick={analyse} icon={<Sparkles size={16} />}>{policyAnalysisComplete ? 'Run analysis again' : 'Analyse policy'}</Button></div>
+            {fixture ? <div className="policy-identity-card"><FileCheck2 size={18} /><div><strong>Controlled document verified</strong><span>{fixture.documentId} · Version {fixture.version} · {fixture.status}</span></div><Badge tone="success">Hash matched</Badge></div> : <div className="policy-unsupported" role="status"><FileSearch size={19} /><div><strong>Document fingerprint is not registered</strong><p>The file is valid, but semantic extraction is unavailable for unregistered policy records in this environment.</p></div></div>}
+            <div className="policy-analysis-action"><small>{fixture ? `Ready to compile ${fixture.documentId} v${fixture.version} into Policy IR.` : 'Select a registered policy before analysis.'}</small><Button loading={isAnalyzing || identifying} disabled={!fixture || isAnalyzing || identifying} onClick={analyse} icon={<Sparkles size={16} />}>{policyAnalysisComplete ? 'Run analysis again' : 'Analyse policy'}</Button></div>
           </>}
           {identifying && <div className="policy-identifying" role="status"><Fingerprint size={15} /> Calculating document fingerprint…</div>}
           {error && <p className="policy-upload-error" role="alert">{error}</p>}
         </Panel>
 
         <Panel title="Analysis pipeline" description="Evidence-producing stages model the production ingestion, extraction, compilation, and validation path." className="policy-analysis-panel">
-          {!fixture ? <div className="policy-analysis-empty"><ShieldCheck size={27} /><h2>Awaiting a verified policy</h2><p>Select Recruitment Policy v1.4 to run the complete prepared analysis.</p></div> : policyAnalysisComplete ? <div className="policy-analysis-results"><CheckCircle2 size={25} /><h2>Policy IR compiled and validated</h2><p>{fixture.documentId} v{fixture.version} is ready for {fixture.status === 'Active' ? 'agent-control mapping' : 'version comparison'}.</p><div className="policy-result-grid"><div><strong>{fixture.clausesDetected}</strong><span>clauses indexed</span></div><div><strong>{fixture.automaticControls}</strong><span>automatic controls</span></div><div className="review"><strong>{fixture.humanReviewControls}</strong><span>human-review controls</span></div><div className="ambiguity"><strong>{fixture.ambiguities}</strong><span>policy ambiguities</span></div></div></div> : <div className="policy-stage-list" aria-live="polite">{policyAnalysisStages.map((stage, index) => { const done = analysisStage > index; const active = isAnalyzing && analysisStage === index; return <div key={stage.label} className={done ? 'done' : active ? 'active' : ''}><span>{done ? <Check size={13} /> : index + 1}</span><div><strong>{stage.label}</strong><small>{stageDetail(index)}</small></div>{active && <Badge tone="info">Processing</Badge>}</div> })}{isAnalyzing && <div className="policy-analysis-progress"><ProgressBar value={progress} tone="info" /><span>{progress}%</span></div>}</div>}
+          {!fixture ? <div className="policy-analysis-empty"><ShieldCheck size={27} /><h2>Awaiting a registered policy</h2><p>Select the active recruitment policy to compile its Policy IR.</p></div> : policyAnalysisComplete ? <div className="policy-analysis-results"><CheckCircle2 size={25} /><h2>Policy IR compiled and validated</h2><p>{fixture.documentId} v{fixture.version} is ready for {fixture.status === 'Active' ? 'agent-control mapping' : 'version comparison'}.</p><div className="policy-result-grid"><div><strong>{fixture.clausesDetected}</strong><span>clauses indexed</span></div><div><strong>{fixture.automaticControls}</strong><span>automatic controls</span></div><div className="review"><strong>{fixture.humanReviewControls}</strong><span>human-review controls</span></div><div className="ambiguity"><strong>{fixture.ambiguities}</strong><span>policy ambiguities</span></div></div></div> : <div className="policy-stage-list" aria-live="polite">{policyAnalysisStages.map((stage, index) => { const done = analysisStage > index; const active = isAnalyzing && analysisStage === index; return <div key={stage.label} className={done ? 'done' : active ? 'active' : ''}><span>{done ? <Check size={13} /> : index + 1}</span><div><strong>{stage.label}</strong><small>{stageDetail(index)}</small></div>{active && <Badge tone="info">Processing</Badge>}</div> })}{isAnalyzing && <div className="policy-analysis-progress"><ProgressBar value={progress} tone="info" /><span>{progress}%</span></div>}</div>}
         </Panel>
       </div>
 
