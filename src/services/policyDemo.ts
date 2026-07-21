@@ -1,5 +1,5 @@
 import { policyFixtures } from '../policyFixtures'
-import type { PolicyFile, PolicyFixture, PolicyFixtureId } from '../types'
+import type { PolicyFile, PolicyFixture } from '../types'
 
 export async function sha256Hex(buffer: ArrayBuffer) {
   const digest = await crypto.subtle.digest('SHA-256', buffer)
@@ -17,15 +17,6 @@ export async function identifyPolicyFile(file: File): Promise<PolicyFile> {
     fixtureId: fixture?.id ?? null,
     identification: fixture ? 'verified' : 'unsupported',
   }
-}
-
-export async function loadPreparedPolicy(id: PolicyFixtureId) {
-  const fixture = policyFixtures[id]
-  const response = await fetch(fixture.assetPath)
-  if (!response.ok) throw new Error(`Could not load ${fixture.fileName}.`)
-  const blob = await response.blob()
-  const file = new File([blob], fixture.fileName, { type: 'application/pdf' })
-  return identifyPolicyFile(file)
 }
 
 export function getPolicyFixture(policyFile: PolicyFile | null): PolicyFixture | null {

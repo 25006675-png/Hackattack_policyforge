@@ -814,10 +814,6 @@ td:first-child { color: #263247; }
 .help-reset-confirm { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .help-reset-confirm > span { width: 100%; color: #7b3640; font-size: 11px; font-weight: 650; text-align: right; }
 
-.policy-registry-action { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 16px 16px; padding: 12px 13px; border: 1px solid #d9e1ed; border-radius: 8px; background: #fbfcfe; }
-.policy-registry-action strong, .policy-registry-action span { display: block; }
-.policy-registry-action strong { color: #334158; font-size: 12px; }
-.policy-registry-action span { margin-top: 3px; color: #778294; font-size: 10.5px; }
 .policy-file-input { display: none; }
 .policy-upload-page .policy-dropzone { width: calc(100% - 32px); border: 1px dashed #9eafd3; font: inherit; }
 .policy-upload-page .policy-dropzone .button { display: inline-flex; }
@@ -950,7 +946,6 @@ td:first-child { color: #263247; }
   .recall-stage-labels { overflow-x: auto; gap: 14px; }
   .recall-stage-labels span { min-width: max-content; }
 
-  .policy-registry-action { align-items: stretch; flex-direction: column; margin: 0 12px 12px; }
   .policy-upload-page .policy-dropzone { min-height: 240px; margin: 12px; width: calc(100% - 24px); }
   .policy-file-card, .policy-identity-card, .policy-unsupported { margin-right: 12px; margin-left: 12px; }
   .policy-metadata { grid-template-columns: 1fr; }

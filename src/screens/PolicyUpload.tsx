@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
 import { Check, CheckCircle2, FileCheck2, FileSearch, FileText, Fingerprint, ShieldCheck, Sparkles, UploadCloud, X } from 'lucide-react'
 import { policyAnalysisStages } from '../policyFixtures'
-import { formatDigest, getPolicyFixture, identifyPolicyFile, loadPreparedPolicy } from '../services/policyDemo'
-import type { PolicyFile, PolicyFixtureId, Screen } from '../types'
+import { formatDigest, getPolicyFixture, identifyPolicyFile } from '../services/policyDemo'
+import type { PolicyFile, Screen } from '../types'
 import { Badge, Button, PageHeader, Panel, ProgressBar } from '../components/ui'
 
 function isPdf(file: File) {
@@ -21,6 +21,7 @@ export function PolicyUpload({ policyFile, policyAnalysisComplete, onPolicyFileC
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [identifying, setIdentifying] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const proposedInputRef = useRef<HTMLInputElement>(null)
   const timerIds = useRef<number[]>([])
   const fixture = getPolicyFixture(policyFile)
 
@@ -56,19 +57,12 @@ export function PolicyUpload({ policyFile, policyAnalysisComplete, onPolicyFileC
     }
   }
 
-  const selectPrepared = async (id: PolicyFixtureId) => {
-    setIdentifying(true)
-    setError('')
-    try {
-      acceptIdentifiedFile(await loadPreparedPolicy(id))
-    } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'The policy document could not be loaded.')
-    } finally {
-      setIdentifying(false)
-    }
+  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    void selectFile(event.target.files?.[0])
+    event.target.value = ''
   }
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onProposedInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     void selectFile(event.target.files?.[0])
     event.target.value = ''
   }
@@ -114,7 +108,6 @@ export function PolicyUpload({ policyFile, policyAnalysisComplete, onPolicyFileC
               <span className="policy-upload-icon"><UploadCloud size={23} /></span><strong className="policy-upload-drop-title">Drop a controlled policy PDF</strong><span className="policy-upload-drop-copy">or choose a file from this computer</span><span className="button button-secondary"><FileText size={15} /> Choose PDF</span>
             </button>
             <input ref={inputRef} className="policy-file-input" type="file" accept="application/pdf,.pdf" onChange={onInputChange} />
-            <div className="policy-registry-action"><div><strong>Registered active policy</strong><span>POL-HR-014 · Recruitment Policy v1.4</span></div><Button variant="secondary" disabled={identifying} onClick={() => void selectPrepared('recruitment-v1.4')}>Load active policy</Button></div>
           </> : <>
             <div className="policy-file-card"><span className="policy-upload-file-icon"><FileText size={23} /></span><div className="policy-file-copy"><strong>{policyFile.name}</strong><small>{formatFileSize(policyFile.size)} · {policyFile.type}</small><span className="policy-digest"><Fingerprint size={12} /> SHA-256 {formatDigest(policyFile.sha256)}</span></div><Button variant="ghost" aria-label="Remove selected policy" title="Remove selected policy" onClick={removePolicy} icon={<X size={16} />} /></div>
             {fixture ? <div className="policy-identity-card"><FileCheck2 size={18} /><div><strong>Controlled document verified</strong><span>{fixture.documentId} · Version {fixture.version} · {fixture.status}</span></div><Badge tone="success">Hash matched</Badge></div> : <div className="policy-unsupported" role="status"><FileSearch size={19} /><div><strong>Document fingerprint is not registered</strong><p>The file is valid, but semantic extraction is unavailable for unregistered policy records in this environment.</p></div></div>}
@@ -125,11 +118,11 @@ export function PolicyUpload({ policyFile, policyAnalysisComplete, onPolicyFileC
         </Panel>
 
         <Panel title="Analysis pipeline" description="Evidence-producing stages model the production ingestion, extraction, compilation, and validation path." className="policy-analysis-panel">
-          {!fixture ? <div className="policy-analysis-empty"><ShieldCheck size={27} /><h2>Awaiting a registered policy</h2><p>Select the active recruitment policy to compile its Policy IR.</p></div> : policyAnalysisComplete ? <div className="policy-analysis-results"><CheckCircle2 size={25} /><h2>Policy IR compiled and validated</h2><p>{fixture.documentId} v{fixture.version} is ready for {fixture.status === 'Active' ? 'agent-control mapping' : 'version comparison'}.</p><div className="policy-result-grid"><div><strong>{fixture.clausesDetected}</strong><span>clauses indexed</span></div><div><strong>{fixture.automaticControls}</strong><span>automatic controls</span></div><div className="review"><strong>{fixture.humanReviewControls}</strong><span>human-review controls</span></div><div className="ambiguity"><strong>{fixture.ambiguities}</strong><span>policy ambiguities</span></div></div></div> : <div className="policy-stage-list" aria-live="polite">{policyAnalysisStages.map((stage, index) => { const done = analysisStage > index; const active = isAnalyzing && analysisStage === index; return <div key={stage.label} className={done ? 'done' : active ? 'active' : ''}><span>{done ? <Check size={13} /> : index + 1}</span><div><strong>{stage.label}</strong><small>{stageDetail(index)}</small></div>{active && <Badge tone="info">Processing</Badge>}</div> })}{isAnalyzing && <div className="policy-analysis-progress"><ProgressBar value={progress} tone="info" /><span>{progress}%</span></div>}</div>}
+          {!fixture ? <div className="policy-analysis-empty"><ShieldCheck size={27} /><h2>Awaiting a registered policy</h2><p>Upload a controlled recruitment policy PDF to compile its Policy IR.</p></div> : policyAnalysisComplete ? <div className="policy-analysis-results"><CheckCircle2 size={25} /><h2>Policy IR compiled and validated</h2><p>{fixture.documentId} v{fixture.version} is ready for {fixture.status === 'Active' ? 'agent-control mapping' : 'version comparison'}.</p><div className="policy-result-grid"><div><strong>{fixture.clausesDetected}</strong><span>clauses indexed</span></div><div><strong>{fixture.automaticControls}</strong><span>automatic controls</span></div><div className="review"><strong>{fixture.humanReviewControls}</strong><span>human-review controls</span></div><div className="ambiguity"><strong>{fixture.ambiguities}</strong><span>policy ambiguities</span></div></div></div> : <div className="policy-stage-list" aria-live="polite">{policyAnalysisStages.map((stage, index) => { const done = analysisStage > index; const active = isAnalyzing && analysisStage === index; return <div key={stage.label} className={done ? 'done' : active ? 'active' : ''}><span>{done ? <Check size={13} /> : index + 1}</span><div><strong>{stage.label}</strong><small>{stageDetail(index)}</small></div>{active && <Badge tone="info">Processing</Badge>}</div> })}{isAnalyzing && <div className="policy-analysis-progress"><ProgressBar value={progress} tone="info" /><span>{progress}%</span></div>}</div>}
         </Panel>
       </div>
 
-      {policyAnalysisComplete && fixture && <div className="policy-complete-banner"><div><CheckCircle2 size={20} /><span><strong>{fixture.status === 'Active' ? 'Active policy ready for agent mapping' : 'Proposed policy ready for comparison'}</strong><small>Every generated rule retains its source clause, version, normalized condition, and runtime outcome.</small></span></div><div className="policy-complete-actions"><Button variant="secondary" onClick={() => navigate('policy-analysis')} icon={<FileText size={16} />}>Review cited analysis</Button><Button onClick={() => navigate(fixture.status === 'Active' ? 'agents' : 'time-machine')} icon={<Sparkles size={16} />}>{fixture.status === 'Active' ? 'Map controls to agent' : 'Compare with v1.4'}</Button></div></div>}
+      {policyAnalysisComplete && fixture && <div className="policy-complete-banner"><div><CheckCircle2 size={20} /><span><strong>{fixture.status === 'Active' ? 'Active policy ready for agent mapping' : 'Proposed policy ready for comparison'}</strong><small>{fixture.status === 'Active' ? 'Upload a proposed update when a new policy version is ready for comparison.' : 'Every generated rule retains its source clause, version, normalized condition, and runtime outcome.'}</small></span></div><div className="policy-complete-actions"><Button variant="secondary" onClick={() => navigate('policy-analysis')} icon={<FileText size={16} />}>Review cited analysis</Button>{fixture.status === 'Active' && <><Button variant="secondary" disabled={identifying || isAnalyzing} onClick={() => proposedInputRef.current?.click()} icon={<UploadCloud size={16} />}>Upload proposed update</Button><input ref={proposedInputRef} className="policy-file-input" type="file" accept="application/pdf,.pdf" onChange={onProposedInputChange} /></>}<Button onClick={() => navigate(fixture.status === 'Active' ? 'agents' : 'time-machine')} icon={<Sparkles size={16} />}>{fixture.status === 'Active' ? 'Map controls to agent' : 'Compare with v1.4'}</Button></div></div>}
     </div>
   )
 }

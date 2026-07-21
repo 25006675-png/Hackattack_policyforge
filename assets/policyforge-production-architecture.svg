@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">PolicyForge Production System Architecture</title>
+  <desc id="desc">A simple production architecture diagram showing frontend, API gateway, policy ingestion, compiler, runtime enforcement, evidence, replay, recall, data stores, integrations, and observability.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f5f7fb; }
+      .panel { fill: #ffffff; stroke: #d9e0ea; stroke-width: 2; }
+      .panel-soft { fill: #fbfcff; stroke: #d9e0ea; stroke-width: 2; }
+      .core { fill: #eef4ff; stroke: #adc4f6; stroke-width: 2.4; }
+      .data { fill: #f7f9fc; stroke: #cbd5e1; stroke-width: 2; }
+      .integration { fill: #f8fbf8; stroke: #bed9c8; stroke-width: 2; }
+      .security { fill: #fff8ed; stroke: #e7c581; stroke-width: 2; }
+      .line { fill: none; stroke: #8b98ac; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .line-strong { fill: none; stroke: #456bd6; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .title { fill: #172033; font: 700 34px Inter, Segoe UI, Arial, sans-serif; letter-spacing: -0.02em; }
+      .subtitle { fill: #657084; font: 500 16px Inter, Segoe UI, Arial, sans-serif; }
+      .group-label { fill: #536177; font: 700 13px Inter, Segoe UI, Arial, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
+      .label { fill: #1f2a3f; font: 700 18px Inter, Segoe UI, Arial, sans-serif; }
+      .small { fill: #617086; font: 600 13px Inter, Segoe UI, Arial, sans-serif; }
+      .tiny { fill: #7a8798; font: 600 11px Inter, Segoe UI, Arial, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+      .pill { fill: #ffffff; stroke: #dbe3ee; stroke-width: 1.5; }
+      .accent { fill: #3159d8; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#8b98ac"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#456bd6"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1600" height="900"/>
+
+  <text class="title" x="80" y="76">PolicyForge Production Architecture</text>
+  <text class="subtitle" x="80" y="108">AI governance control plane for policy ingestion, runtime enforcement, evidence, replay, and recall.</text>
+
+  <rect class="panel" x="70" y="150" width="260" height="610" rx="14"/>
+  <text class="group-label" x="95" y="188">Experience</text>
+  <rect class="panel-soft" x="100" y="225" width="200" height="78" rx="10"/>
+  <text class="label" x="128" y="258">Web Console</text>
+  <text class="small" x="128" y="282">React · TypeScript</text>
+  <rect class="panel-soft" x="100" y="337" width="200" height="78" rx="10"/>
+  <text class="label" x="132" y="370">Reviewer UI</text>
+  <text class="small" x="132" y="394">Tasks · Evidence</text>
+  <rect class="panel-soft" x="100" y="449" width="200" height="78" rx="10"/>
+  <text class="label" x="138" y="482">Admin UI</text>
+  <text class="small" x="138" y="506">Policies · Agents</text>
+  <rect class="panel-soft" x="100" y="561" width="200" height="78" rx="10"/>
+  <text class="label" x="140" y="594">API Clients</text>
+  <text class="small" x="140" y="618">SDK · Webhooks</text>
+
+  <rect class="panel" x="410" y="150" width="780" height="610" rx="14"/>
+  <text class="group-label" x="435" y="188">PolicyForge Services</text>
+
+  <rect class="security" x="450" y="225" width="210" height="80" rx="10"/>
+  <text class="label" x="494" y="258">API Gateway</text>
+  <text class="small" x="497" y="282">AuthN · AuthZ</text>
+
+  <rect class="core" x="735" y="225" width="210" height="80" rx="10"/>
+  <text class="label" x="771" y="258">Policy Intake</text>
+  <text class="small" x="768" y="282">PDF · DOCX · Portal</text>
+
+  <rect class="core" x="450" y="360" width="210" height="80" rx="10"/>
+  <text class="label" x="495" y="393">Policy IR</text>
+  <text class="small" x="484" y="417">Extraction · Citations</text>
+
+  <rect class="core" x="735" y="360" width="210" height="80" rx="10"/>
+  <text class="label" x="771" y="393">Compiler</text>
+  <text class="small" x="760" y="417">Rules · Controls</text>
+
+  <rect class="core" x="1010" y="360" width="140" height="80" rx="10"/>
+  <text class="label" x="1043" y="393">PDP</text>
+  <text class="small" x="1034" y="417">Decisions</text>
+
+  <rect class="core" x="450" y="505" width="210" height="80" rx="10"/>
+  <text class="label" x="493" y="538">Evidence</text>
+  <text class="small" x="490" y="562">Capsules · Audit</text>
+
+  <rect class="core" x="735" y="505" width="210" height="80" rx="10"/>
+  <text class="label" x="782" y="538">Replay</text>
+  <text class="small" x="772" y="562">Time Machine</text>
+
+  <rect class="core" x="1010" y="505" width="140" height="80" rx="10"/>
+  <text class="label" x="1040" y="538">Recall</text>
+  <text class="small" x="1032" y="562">Remediate</text>
+
+  <rect class="security" x="450" y="642" width="210" height="66" rx="10"/>
+  <text class="label" x="495" y="674">Secrets</text>
+  <text class="small" x="484" y="696">KMS · Vault</text>
+
+  <rect class="security" x="735" y="642" width="210" height="66" rx="10"/>
+  <text class="label" x="787" y="674">Queue</text>
+  <text class="small" x="765" y="696">Events · Jobs</text>
+
+  <rect class="security" x="1010" y="642" width="140" height="66" rx="10"/>
+  <text class="label" x="1048" y="674">PEP</text>
+  <text class="small" x="1030" y="696">Enforce</text>
+
+  <rect class="panel" x="1270" y="150" width="260" height="610" rx="14"/>
+  <text class="group-label" x="1295" y="188">Enterprise Systems</text>
+  <rect class="integration" x="1300" y="225" width="200" height="74" rx="10"/>
+  <text class="label" x="1352" y="258">ATS</text>
+  <text class="small" x="1330" y="282">HR Systems</text>
+  <rect class="integration" x="1300" y="327" width="200" height="74" rx="10"/>
+  <text class="label" x="1342" y="360">Models</text>
+  <text class="small" x="1325" y="384">LLM · ML APIs</text>
+  <rect class="integration" x="1300" y="429" width="200" height="74" rx="10"/>
+  <text class="label" x="1334" y="462">Workflow</text>
+  <text class="small" x="1328" y="486">Jira · ServiceNow</text>
+  <rect class="integration" x="1300" y="531" width="200" height="74" rx="10"/>
+  <text class="label" x="1340" y="564">Identity</text>
+  <text class="small" x="1327" y="588">SSO · SCIM</text>
+  <rect class="integration" x="1300" y="633" width="200" height="74" rx="10"/>
+  <text class="label" x="1334" y="666">SIEM</text>
+  <text class="small" x="1327" y="690">Logs · Alerts</text>
+
+  <rect class="panel" x="410" y="790" width="780" height="72" rx="14"/>
+  <text class="group-label" x="435" y="833">Data Layer</text>
+  <rect class="pill" x="565" y="810" width="118" height="32" rx="16"/>
+  <text class="small" x="597" y="831">Postgres</text>
+  <rect class="pill" x="704" y="810" width="112" height="32" rx="16"/>
+  <text class="small" x="734" y="831">Object</text>
+  <rect class="pill" x="837" y="810" width="104" height="32" rx="16"/>
+  <text class="small" x="864" y="831">Vector</text>
+  <rect class="pill" x="962" y="810" width="112" height="32" rx="16"/>
+  <text class="small" x="990" y="831">Ledger</text>
+
+  <rect class="panel" x="70" y="790" width="260" height="72" rx="14"/>
+  <text class="group-label" x="95" y="833">Delivery</text>
+  <rect class="pill" x="190" y="810" width="104" height="32" rx="16"/>
+  <text class="small" x="222" y="831">CDN</text>
+
+  <rect class="panel" x="1270" y="790" width="260" height="72" rx="14"/>
+  <text class="group-label" x="1295" y="833">Platform</text>
+  <rect class="pill" x="1402" y="810" width="90" height="32" rx="16"/>
+  <text class="small" x="1427" y="831">K8s</text>
+
+  <path class="line-strong" marker-end="url(#arrow-blue)" d="M330 265 H442"/>
+  <path class="line-strong" marker-end="url(#arrow-blue)" d="M660 265 H727"/>
+  <path class="line" marker-end="url(#arrow)" d="M840 305 V352"/>
+  <path class="line" marker-end="url(#arrow)" d="M735 400 H668"/>
+  <path class="line-strong" marker-end="url(#arrow-blue)" d="M945 400 H1002"/>
+  <path class="line" marker-end="url(#arrow)" d="M1080 440 V497"/>
+  <path class="line" marker-end="url(#arrow)" d="M945 545 H1002"/>
+  <path class="line" marker-end="url(#arrow)" d="M660 545 H727"/>
+  <path class="line" marker-end="url(#arrow)" d="M555 440 V497"/>
+  <path class="line" marker-end="url(#arrow)" d="M840 585 V634"/>
+  <path class="line-strong" marker-end="url(#arrow-blue)" d="M1150 675 H1292"/>
+  <path class="line" marker-end="url(#arrow)" d="M1190 263 H1292"/>
+  <path class="line" marker-end="url(#arrow)" d="M1190 365 H1292"/>
+  <path class="line" marker-end="url(#arrow)" d="M1190 467 H1292"/>
+  <path class="line" marker-end="url(#arrow)" d="M1190 569 H1292"/>
+  <path class="line" marker-end="url(#arrow)" d="M1190 671 H1292"/>
+  <path class="line" marker-end="url(#arrow)" d="M555 708 V782"/>
+  <path class="line" marker-end="url(#arrow)" d="M840 708 V782"/>
+  <path class="line" marker-end="url(#arrow)" d="M1080 708 V782"/>
+
+  <circle class="accent" cx="450" cy="265" r="4"/>
+  <circle class="accent" cx="1008" cy="400" r="4"/>
+  <circle class="accent" cx="1150" cy="675" r="4"/>
+</svg>
