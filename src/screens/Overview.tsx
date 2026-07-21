@@ -1,6 +1,6 @@
 import {
   ArrowRight, Bot, CheckCircle2, ChevronRight, CircleAlert, Clock3,
-  FileWarning, Fingerprint, MoreHorizontal, ShieldAlert, Sparkles, Users,
+  FileWarning, Fingerprint, ShieldAlert, Users,
 } from 'lucide-react'
 import { agentRows } from '../data'
 import type { DemoState, Screen, Tone } from '../types'
@@ -12,7 +12,7 @@ function statusTone(status: string): Tone {
   return 'warning'
 }
 
-export function Overview({ state, navigate }: { state: DemoState; navigate: (screen: Screen) => void }) {
+export function Overview({ state, policyAnalysisComplete, navigate }: { state: DemoState; policyAnalysisComplete: boolean; navigate: (screen: Screen) => void }) {
   const candidateStatus = state.agentActive ? 'Active' : 'Awaiting approval'
   return (
     <div className="page-stack">
@@ -20,7 +20,6 @@ export function Overview({ state, navigate }: { state: DemoState; navigate: (scr
         eyebrow="AI governance"
         title="Governance overview"
         description="A live view of agents, consequential decisions, and policy interventions across Northstar Group."
-        actions={<Button variant="secondary" icon={<Sparkles size={16} />}>Generate governance report</Button>}
       />
 
       <section className={`attention-panel ${state.agentActive ? 'attention-complete' : ''}`}>
@@ -40,8 +39,8 @@ export function Overview({ state, navigate }: { state: DemoState; navigate: (scr
           <strong>{state.agentActive ? '7' : '3'}</strong>
           <span>{state.agentActive ? 'active controls' : 'high-risk capabilities'}</span>
         </div>
-        <Button onClick={() => navigate('agents')} icon={<ArrowRight size={16} />}>
-          {state.agentActive ? 'Open agent' : 'Review agent'}
+        <Button onClick={() => navigate(policyAnalysisComplete ? 'agents' : 'policies')} icon={<ArrowRight size={16} />}>
+          {state.agentActive ? 'Open agent' : policyAnalysisComplete ? 'Review agent' : 'Analyse policy first'}
         </Button>
       </section>
 
@@ -56,18 +55,17 @@ export function Overview({ state, navigate }: { state: DemoState; navigate: (scr
         <Panel title="Agent inventory" description="Registered AI systems and their current governance status." action={<button className="text-button" onClick={() => navigate('agents')}>View all <ChevronRight size={15} /></button>}>
           <div className="table-wrap">
             <table>
-              <thead><tr><th>Agent</th><th>Owner</th><th>Risk</th><th>Status</th><th>Version</th><th /></tr></thead>
+              <thead><tr><th>Agent</th><th>Owner</th><th>Risk</th><th>Status</th><th>Version</th></tr></thead>
               <tbody>
                 {agentRows.map(([name, owner, risk, status, version], index) => {
                   const visibleStatus = index === 0 ? candidateStatus : status
                   return (
-                    <tr key={name} onClick={() => index === 0 && navigate('agents')} className={index === 0 ? 'clickable-row' : ''}>
+                    <tr key={name} onClick={() => index === 0 && navigate('agents')} onKeyDown={(event) => { if (index === 0 && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); navigate('agents') } }} tabIndex={index === 0 ? 0 : undefined} aria-label={index === 0 ? 'Review Candidate Screening Agent' : undefined} className={index === 0 ? 'clickable-row' : ''}>
                       <td><span className="agent-cell-icon"><Bot size={15} /></span><strong>{name}</strong></td>
                       <td>{owner}</td>
                       <td><Badge tone={risk === 'High' ? 'danger' : risk === 'Medium' ? 'warning' : 'neutral'}>{risk}</Badge></td>
                       <td><Badge tone={statusTone(visibleStatus)} dot>{visibleStatus}</Badge></td>
                       <td className="mono">v{version}</td>
-                      <td><MoreHorizontal size={16} /></td>
                     </tr>
                   )
                 })}

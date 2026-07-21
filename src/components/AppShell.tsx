@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import {
-  Boxes, ChevronDown, Command, FileText, Gauge, HelpCircle, History, ListRestart,
-  RotateCcw, Route, Search, ShieldCheck, Sparkles,
+  Boxes, FileText, Gauge, HelpCircle, History, ListRestart,
+  Route, Search, ShieldCheck, Sparkles, X,
 } from 'lucide-react'
 import type { Screen } from '../types'
 import { Button } from './ui'
@@ -26,6 +26,25 @@ function PolicyForgeMark() {
 }
 
 export function AppShell({ screen, onNavigate, onReset, children }: { screen: Screen; onNavigate: (screen: Screen) => void; onReset: () => void; children: ReactNode }) {
+  const helpDialog = useRef<HTMLDialogElement>(null)
+  const helpButton = useRef<HTMLButtonElement>(null)
+  const [confirmingReset, setConfirmingReset] = useState(false)
+
+  const openHelp = () => {
+    setConfirmingReset(false)
+    helpDialog.current?.showModal()
+  }
+  const closeHelp = () => {
+    helpDialog.current?.close()
+    helpButton.current?.focus()
+  }
+  const resetDemo = () => {
+    onReset()
+    setConfirmingReset(false)
+    helpDialog.current?.close()
+    helpButton.current?.focus()
+  }
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -39,7 +58,7 @@ export function AppShell({ screen, onNavigate, onReset, children }: { screen: Sc
             return (
               <button
                 key={item.id}
-                className={screen === item.id || (item.id === 'policies' && (screen === 'policy-analysis' || screen === 'policy-patch')) || (item.id === 'recalls' && screen === 'model-incident') ? 'active' : ''}
+                className={screen === item.id || (item.id === 'policies' && screen === 'policy-analysis') ? 'active' : ''}
                 aria-label={item.fullLabel}
                 onClick={() => onNavigate(item.id)}
               >
@@ -53,8 +72,8 @@ export function AppShell({ screen, onNavigate, onReset, children }: { screen: Sc
         </nav>
 
         <div className="sidebar-foot">
-          <button aria-label="Help and resources"><HelpCircle size={19} strokeWidth={1.8} /><span className="rail-label">Help</span></button>
-          <button className="user-rail-button" aria-label="Maya Chen"><span className="user-avatar">MC</span><span className="rail-label">Maya</span></button>
+          <button ref={helpButton} aria-label="Help and demo controls" onClick={openHelp}><HelpCircle size={19} strokeWidth={1.8} /><span className="rail-label">Help</span></button>
+          <div className="user-rail-button" aria-label="Signed in as Maya Chen"><span className="user-avatar">MC</span><span className="rail-label">Maya</span></div>
         </div>
       </aside>
 
@@ -63,21 +82,40 @@ export function AppShell({ screen, onNavigate, onReset, children }: { screen: Sc
           <div className="topbar-leading">
             <div className="product-wordmark">Policy<span>Forge</span></div>
             <span className="topbar-divider" />
-            <button className="workspace-switcher">
+            <div className="workspace-switcher workspace-static">
               <span className="workspace-avatar">N</span>
               <span>Northstar Group</span>
-              <ChevronDown size={14} />
-            </button>
-            <button className="global-search"><Search size={16} /><span>Search agents, decisions, policies…</span><kbd><Command size={11} /> K</kbd></button>
+            </div>
+            <div className="global-search global-search-static"><Search size={16} /><span>Northstar ATS → Agent → PolicyForge</span></div>
           </div>
           <div className="topbar-meta">
             <span className="environment"><span /> Production</span>
-            <button className="policy-switch"><Sparkles size={15} /> Recruitment Policy v1.4 <ChevronDown size={14} /></button>
-            <Button variant="ghost" icon={<RotateCcw size={15} />} onClick={onReset}>Reset demo</Button>
+            <div className="policy-switch policy-static"><Sparkles size={15} /> Recruitment Policy v1.4</div>
           </div>
         </header>
         <main className="content">{children}</main>
       </div>
+
+      <dialog
+        ref={helpDialog}
+        className="help-dialog"
+        aria-labelledby="help-dialog-title"
+        onClose={() => setConfirmingReset(false)}
+        onClick={(event) => { if (event.target === event.currentTarget) closeHelp() }}
+      >
+        <div className="help-dialog-shell">
+          <header><div><span>PolicyForge support</span><h2 id="help-dialog-title">Demo guide and architecture</h2></div><button type="button" aria-label="Close help" onClick={closeHelp}><X size={18} /></button></header>
+          <div className="help-dialog-content">
+            <section><h3>Recommended demo path</h3><ol><li>Analyse Recruitment Policy v1.4.</li><li>Map controls to Candidate Screening Agent.</li><li>Govern candidate action ACT-8842.</li><li>Inspect Decision Capsule PF-2841.</li><li>Replay Policy v1.5 and create Recall RC-017.</li></ol></section>
+            <section><h3>Technical architecture</h3><p>The Document Ingestion Service produces a versioned Policy IR. The Policy Compiler combines it with the Agent Manifest. At runtime, the PEP intercepts an action and the PDP returns ALLOW, TRANSFORM, HUMAN REVIEW, or BLOCK with cited evidence.</p></section>
+            <section><h3>Offline demonstration boundary</h3><p>This build recognizes two prepared policy documents by SHA-256 fingerprint. Production deployments connect document extraction, runtime telemetry, append-only evidence storage, deterministic replay, and idempotent recall services.</p></section>
+          </div>
+          <footer className="help-demo-controls">
+            <div><strong>Demo controls</strong><span>Reset clears policy analysis and every completed workflow state.</span></div>
+            {confirmingReset ? <div className="help-reset-confirm" role="alert"><span>Reset the complete demonstration?</span><Button variant="secondary" onClick={() => setConfirmingReset(false)}>Keep current state</Button><Button variant="danger" onClick={resetDemo}>Reset demo</Button></div> : <Button variant="secondary" onClick={() => setConfirmingReset(true)}>Reset demo</Button>}
+          </footer>
+        </div>
+      </dialog>
     </div>
   )
 }

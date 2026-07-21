@@ -5,6 +5,7 @@ import {
   LockKeyhole, Scale, ShieldCheck, UserCheck,
 } from 'lucide-react'
 import { evidenceNodes } from '../data'
+import { downloadJsonArtifact } from '../services/policyDemo'
 import type { DemoState, Screen } from '../types'
 import { Badge, Button, PageHeader, Panel } from '../components/ui'
 
@@ -13,6 +14,7 @@ const nodeIcons = [FileText, Fingerprint, Bot, GitBranch, ShieldCheck, UserCheck
 export function DecisionCapsule({ state, navigate }: { state: DemoState; navigate: (screen: Screen) => void }) {
   const [selected, setSelected] = useState('model')
   const [reviewRequested, setReviewRequested] = useState(false)
+  const [showRawEvent, setShowRawEvent] = useState(false)
   const node = evidenceNodes.find((item) => item.id === selected) ?? evidenceNodes[0]
 
   if (!state.decisionComplete) {
@@ -25,7 +27,7 @@ export function DecisionCapsule({ state, navigate }: { state: DemoState; navigat
         eyebrow="Decision Capsule · PF-2841"
         title="Candidate application outcome"
         description="A structured reconstruction of evidence, policy, and responsibility."
-        actions={<><Button variant="secondary" icon={<Download size={15} />}>Export evidence</Button><Button variant="secondary" icon={<ExternalLink size={15} />}>Open source record</Button></>}
+        actions={<><Button variant="secondary" icon={<Download size={15} />} onClick={() => downloadJsonArtifact('PF-2841-evidence.json', { capsuleId: 'PF-2841', applicationId: 'APP-8842', agent: 'Candidate Screening Agent v2.1', model: 'TalentModel v4.2', policy: 'Recruitment Policy v1.4', policyDocument: 'POL-HR-014', reviewer: 'Maya Chen', outcome: 'Did not proceed', evidence: evidenceNodes })}>Export evidence JSON</Button><a className="button button-secondary" href="/demo-policies/Northstar-Recruitment-Policy-v1.4.pdf" target="_blank" rel="noreferrer"><ExternalLink size={15} /><span>Open source policy</span></a></>}
       />
 
       <div className="capsule-meta">
@@ -61,7 +63,8 @@ export function DecisionCapsule({ state, navigate }: { state: DemoState; navigat
             {node.details.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}
           </div>
           <div className="evidence-provenance"><LockKeyhole size={15} /><div><strong>Evidence provenance</strong><span>Captured at event time · Record unchanged</span></div><Badge tone="success">Verified</Badge></div>
-          <button className="text-button">View raw recorded event <ArrowRight size={14} /></button>
+          <button className="text-button" onClick={() => setShowRawEvent((visible) => !visible)}>{showRawEvent ? 'Hide raw recorded event' : 'View raw recorded event'} <ArrowRight size={14} /></button>
+          {showRawEvent && <pre className="raw-event" aria-label={`Raw event for ${node.title}`}>{JSON.stringify({ eventId: `EVT-${node.id.toUpperCase()}-2841`, capsuleId: 'PF-2841', type: node.label, title: node.title, recordedAt: '2026-06-12T10:04:51+08:00', policyVersion: '1.4', immutable: true, details: Object.fromEntries(node.details) }, null, 2)}</pre>}
         </aside>
       </div>
 

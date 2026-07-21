@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight, Bot, Check, CheckCircle2, CircleAlert, FileClock, FileText,
   GitBranch, History, Mail, Network, Play, RefreshCw, Sparkles, Table2,
@@ -10,13 +10,26 @@ import { Badge, Button, Metric, PageHeader, Panel, ProgressBar } from '../compon
 export function TimeMachine({ state, update, navigate }: { state: DemoState; update: (next: Partial<DemoState>) => void; navigate: (screen: Screen) => void }) {
   const [running, setRunning] = useState(false)
   const [replayStep, setReplayStep] = useState(0)
+  const timerIds = useRef<number[]>([])
   const replaySteps = ['Reconstructing historical decisions', 'Applying Policy v1.5', 'Comparing outcomes', 'Tracing downstream consequences']
 
+  const clearTimers = () => {
+    timerIds.current.forEach((timerId) => window.clearTimeout(timerId))
+    timerIds.current = []
+  }
+
+  useEffect(() => clearTimers, [])
+
   const runReplay = () => {
+    clearTimers()
     setRunning(true)
     setReplayStep(0)
-    replaySteps.forEach((_, index) => setTimeout(() => setReplayStep(index + 1), 620 * (index + 1)))
-    setTimeout(() => { setRunning(false); update({ replayComplete: true }) }, 2850)
+    replaySteps.forEach((_, index) => timerIds.current.push(window.setTimeout(() => setReplayStep(index + 1), 620 * (index + 1))))
+    timerIds.current.push(window.setTimeout(() => {
+      setRunning(false)
+      update({ replayComplete: true })
+      timerIds.current = []
+    }, 2850))
   }
 
   return (
@@ -25,10 +38,10 @@ export function TimeMachine({ state, update, navigate }: { state: DemoState; upd
         eyebrow="Policy replay · PR-005"
         title="Policy Time Machine"
         description="Test a proposed policy against historical decisions before it is deployed."
-        actions={<Badge tone="violet" dot>Simulation</Badge>}
+        actions={<><Badge tone="violet" dot>Deterministic replay</Badge><a className="button button-secondary" href="/demo-policies/Northstar-Recruitment-Policy-v1.5-Proposed.pdf" target="_blank" rel="noreferrer"><FileText size={15} /><span>Open Policy v1.5 PDF</span></a></>}
       />
 
-      <div className="simulation-banner"><FileClock size={17} /><span><strong>Counterfactual analysis</strong> Replay does not alter original decisions or reverse real-world outcomes.</span></div>
+      <div className="simulation-banner"><FileClock size={17} /><span><strong>Deterministic counterfactual analysis</strong> The replay worker evaluates stored action contexts against an immutable v1.5 policy snapshot. It does not alter original decisions or reverse real-world outcomes.</span></div>
 
       <Panel title="Policy version comparison" description="The proposed clause changes how documented leave is evaluated." className="policy-diff-panel">
         <div className="policy-diff">

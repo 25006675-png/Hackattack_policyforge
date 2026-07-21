@@ -1,13 +1,13 @@
 import type { EvidenceNode } from './types'
 
 export const controls = [
-  { id: 'CTL-021', situation: 'Candidate identity', outcome: 'TRANSFORM', detail: 'Remove before external inference', evidence: 'Data Policy §4.2' },
-  { id: 'CTL-022', situation: 'Résumé data', outcome: 'ALLOW', detail: 'Approved models only', evidence: 'AI Standard §3.4' },
-  { id: 'CTL-023', situation: 'Protected attributes', outcome: 'BLOCK', detail: 'Exclude from evaluation', evidence: 'Recruitment §6.1' },
-  { id: 'CTL-024', situation: 'Candidate ranking', outcome: 'ALLOW', detail: 'Allow and record', evidence: 'Recruitment §7.1' },
-  { id: 'CTL-025', situation: 'Negative recommendation', outcome: 'HUMAN REVIEW', detail: 'Authorized HR approval', evidence: 'Recruitment §7.3' },
-  { id: 'CTL-026', situation: 'Candidate notification', outcome: 'TRANSFORM', detail: 'Disclose AI involvement', evidence: 'AI Standard §8.2' },
-  { id: 'CTL-027', situation: 'Consequential action', outcome: 'RECORD', detail: 'Create Decision Capsule', evidence: 'Audit Policy §5.6' },
+  { id: 'CTL-021', situation: 'Candidate identity', outcome: 'TRANSFORM', detail: 'Remove before external inference', evidence: 'Recruitment Policy §4.2' },
+  { id: 'CTL-022', situation: 'Résumé data', outcome: 'ALLOW', detail: 'Approved models only', evidence: 'Recruitment Policy §5.3' },
+  { id: 'CTL-023', situation: 'Protected attributes', outcome: 'BLOCK', detail: 'Exclude from evaluation', evidence: 'Recruitment Policy §6.1' },
+  { id: 'CTL-024', situation: 'Candidate ranking', outcome: 'ALLOW', detail: 'Allow and record', evidence: 'Recruitment Policy §6.3' },
+  { id: 'CTL-025', situation: 'Negative recommendation', outcome: 'HUMAN REVIEW', detail: 'Authorized HR approval', evidence: 'Recruitment Policy §7.3' },
+  { id: 'CTL-026', situation: 'Candidate notification', outcome: 'TRANSFORM', detail: 'Disclose AI involvement', evidence: 'Recruitment Policy §8.2' },
+  { id: 'CTL-027', situation: 'Consequential action', outcome: 'RECORD', detail: 'Create Decision Capsule', evidence: 'Recruitment Policy §9.1' },
 ]
 
 export const testScenarios = [
