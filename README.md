@@ -12,6 +12,7 @@
 - [Feature](#feature)
 - [Installation](#installation)
 - [Tech Stack](#tech-stack)
+- [Delieverables](#delieverables)
 - [Contribution](#contribution)
 - [Disclaimer](#disclaimer)
 
@@ -43,7 +44,7 @@ The prototype demonstrates how an organization could:
 
 ### Agent governance
 
-- Review the Candidate Screening Agent manifest, owner, model, tools, permissions, connected systems, and risk level.
+- Shows agent capabilities, owner, model, tools, permissions, connected systems, and risk level.
 - Map approved policy controls to the agent's declared capabilities.
 - Resolve policy ambiguity before deployment.
 - Test representative `ALLOW`, `TRANSFORM`, `HUMAN REVIEW`, and `BLOCK` scenarios.
@@ -51,7 +52,6 @@ The prototype demonstrates how an organization could:
 
 ### Governed runtime action
 
-- Process a prepared candidate application through the governed workflow.
 - Detect and remove direct identifiers before external-model inference.
 - Record model and agent outputs.
 - Pause a consequential recommendation when policy requires human review.
@@ -158,6 +158,12 @@ npm run preview
 | Auth | Supabase Auth
 | Background jobs | Celery
 
+## Delieverables
+
+Proposal: [Click Me]()  
+Pitch Deck: [Click Me]()  
+Presentation Video: [Click Me]()  
+
 ## Contribution
 
 Contributions that improve the demonstrator, accessibility, documentation, test coverage, or production architecture are welcome.
@@ -167,6 +173,7 @@ Contributions that improve the demonstrator, accessibility, documentation, test 
 This project is developed for Hack Attack 3.0.  
 Case Study 3 - AI Governance & Responsible AI in Enterprise
 
+---
 ### Note
 PolicyForge in this repository is a competition prototype and product demonstrator. The current implementation is a frontend-first application that uses prepared fixtures and simulated service responses. 
 
@@ -174,10 +181,12 @@ The prepared policy documents are synthetic controlled documents and contain no 
 
 The interface and generated artifacts are intended to demonstrate a responsible AI-governance workflow. They are not legal, compliance, employment, security, or regulatory advice and should not be used as the sole basis for consequential decisions.
 
+---
 ### Future Implemention
 
 We will develop PolicyForge from its current demo prototype into a live and fully functional production product. The production version will replace prepared fixtures and simulated operations with secure backend services, persistent databases, real policy ingestion and compilation, enterprise authentication, live AI-agent and business-system integrations, scalable runtime enforcement, durable evidence storage, automated replay and recall workflows, and production-grade monitoring, security, resilience, and disaster recovery.
 
+---
 
 <div align="center">
   <strong>Developed by team DsAi</strong>
