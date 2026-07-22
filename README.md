@@ -160,9 +160,10 @@ npm run preview
 
 ## Delieverables
 
-Proposal: [Click Me]()  
-Pitch Deck: [Click Me]()  
-Presentation Video: [Click Me]()  
+Proposal: [Click Me](https://drive.google.com/file/d/1BAziv7yTy2F6g2NSjnWrFi6v2CH4GaOn/view?usp=sharing)  
+Pitch Deck: [Click Me](https://docs.google.com/presentation/d/1OKmYPz_E8CXTaYsee2maWQ_5-2ecRckB/edit?usp=sharing&ouid=105690092141349337831&rtpof=true&sd=true)  
+Presentation Video: [Click Me](https://youtu.be/D0kTKR0_jTA)  
+Prototype Video: [Click Me](https://youtu.be/9i6sxJHjw2s)  
 
 ## Contribution
 
